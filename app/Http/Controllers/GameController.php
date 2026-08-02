@@ -13,7 +13,9 @@ class GameController extends Controller
      */
     public function index()
     {
-        //
+        return inertia('games/index', [
+            'games' => Game::all(),
+        ]);
     }
 
     /**
