@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class GameController extends Controller
 {
@@ -31,7 +32,29 @@ class GameController extends Controller
      */
     public function store(StoreGameRequest $request)
     {
-        //
+        try {
+            $game = Game::create($request->validated());
+            // Upload image to Cloudinary
+            $cover = null;
+            if ($request->hasFile('cover_img')) {
+                $cover = Cloudinary::uploadApi()->upload($request->file('cover_img')->getRealPath(), 
+                ['folder' => 'backlist/'. $request->user()->id .'/games',]);
+            }
+            $background = null;
+            if ($request->hasFile('background_img')) {
+                $background = Cloudinary::uploadApi()->upload($request->file('background_img')->getRealPath(), 
+                ['folder' => 'backlist/'. $request->user()->id .'/games',]);
+            }
+            $game->update([
+                'cover' => $cover['secure_url'] ?? null,
+                'cover_public_id' => $cover['public_id'] ?? null,
+                'background_image' => $background['secure_url'] ?? null,
+                'background_public_id' => $background['public_id'] ?? null,
+            ]);
+            return redirect()->route('games.index')->with('success', 'Game created successfully.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => $e->getMessage(),]);
+        }
     }
 
     /**

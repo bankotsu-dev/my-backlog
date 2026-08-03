@@ -1,6 +1,4 @@
-import { FormEvent } from "react";
 import { useForm } from "@inertiajs/react";
-
 import {
     Dialog,
     DialogContent,
@@ -9,12 +7,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
 import {
     Select,
     SelectContent,
@@ -22,20 +18,40 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
+import { usePage } from "@inertiajs/react";
+import type { Auth } from "@/types";
 
 interface Props {
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
+interface GameForm {
+    [key: string]: string | number | boolean | File | null;
+    user_id: number;
+    title: string;
+    status: string;
+    description: string;
+    notes: string;
+    cover_img: File | null;
+    background_img: File | null;
+    developer: string;
+    publisher: string;
+    rating: number;
+    hg: boolean;
+    version: string;
+}
+
 export default function AddGameModal({
     open,
     onOpenChange,
 }: Props) {
+    const { auth } = usePage<{ auth: Auth }>().props;
 
     const {
         data,
@@ -44,29 +60,36 @@ export default function AddGameModal({
         processing,
         errors,
         reset,
-    } = useForm({
+    } = useForm<GameForm>({
+        user_id: auth.user.id,
         title: "",
         status: "Backlog",
         description: "",
         notes: "",
-        cover: "",
-        background_image: "",
+        cover_img: null as File | null,
+        background_img: null as File | null,
         developer: "",
         publisher: "",
-        rating: 5,
-        hltb: "",
+        rating: 0,
+        hg: false,
         version: "",
     });
 
-    function submit(e: FormEvent) {
+    function submit(e:React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         post(route("games.store"), {
+            forceFormData: true,
             preserveScroll: true,
 
             onSuccess: () => {
+                toast.success("Game has been saved.", { position: "top-right" });
                 reset();
                 onOpenChange(false);
+            },
+
+            onError: (errors) => {
+                toast.error(errors.error, { position: "top-right" });
             },
         });
     }
@@ -76,7 +99,7 @@ export default function AddGameModal({
             open={open}
             onOpenChange={onOpenChange}
         >
-            <DialogContent className="max-w-6xl overflow-hidden p-0">
+            <DialogContent className="max-w-6xl overflow-hidden p-0" onInteractOutside={(e) => e.preventDefault()}>
                 <DialogHeader className="border-b p-6">
                     <DialogTitle>
                         Add a new game
@@ -93,12 +116,12 @@ export default function AddGameModal({
                             {/* Cover */}
                             <div className="col-span-3">
                                 <div className="aspect-[2/3] overflow-hidden rounded-xl border bg-muted">
-                                    {data.cover ? (
+                                    {data.cover_img ? (
                                         <img
-                                            src={data.cover}
+                                            src={data.cover_img ? URL.createObjectURL(data.cover_img) : ""}
                                             className="h-full w-full object-cover"
                                         />
-                                    ) : (
+                                        ) : (
                                         <div className="flex h-full items-center justify-center text-muted-foreground">
                                             ...
                                         </div>
@@ -108,13 +131,17 @@ export default function AddGameModal({
                                 <div className="mt-4">
                                     <Label>Cover URL</Label>
                                     <Input
-                                        value={data.cover}
-                                        onChange={(e) => setData("cover", e.target.value)}
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                           const file = e.target.files?.[0];
+                                           if (file) setData("cover_img", file); 
+                                        }}
                                     />
 
-                                    {errors.cover && (
+                                    {errors.cover_img && (
                                         <p className="mt-1 text-sm text-destructive">
-                                            {errors.cover}
+                                            {errors.cover_img}
                                         </p>
                                     )}
                                 </div>
@@ -194,53 +221,66 @@ export default function AddGameModal({
                                     <div className="col-span-2">
                                         <Label>Background URL</Label>
                                         <Input
-                                            value={data.background_image}
-                                            onChange={(e) => setData("background_image", e.target.value)}
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) => {
+                                           const file = e.target.files?.[0];
+                                           if (file) setData("background_img", file); 
+                                        }}
                                         />
                                     </div>
                                 </div>
 
                                 <Separator />
-                                <div className="space-y-6">
+                                <div className="space-y-6 grid grid-cols-12 gap-4 items-end">
 
-                                {/* Rating */}
+                                    {/* Rating */}
 
-                                <div>
-                                    <Label>Rating ({data.rating}/5)</Label>
-                                    <Slider
-                                        className="mt-4"
-                                        min={0}
-                                        max={5}
-                                        step={1}
-                                        value={[data.rating]}
-                                        onValueChange={(value) =>setData("rating", value[0])}
-                                    />
+                                    <div className="col-span-6">
+                                        <Label>Rating ({data.rating}/5)</Label>
+                                        <Slider
+                                            className="mt-4"
+                                            min={0}
+                                            max={5}
+                                            step={1}
+                                            value={[data.rating]}
+                                            onValueChange={(value) =>setData("rating", value[0])}
+                                        />
 
-                                    {errors.rating && (
-                                        <p className="mt-1 text-sm text-destructive">
-                                            {errors.rating}
-                                        </p>
-                                    )}
-                                </div>
+                                        {errors.rating && (
+                                            <p className="mt-1 text-sm text-destructive">
+                                                {errors.rating}
+                                            </p>
+                                        )}
+                                    </div>
 
-                                {/* Description */}
-                                <div>
-                                    <Label>Description</Label>
-                                    <Textarea
-                                        rows={5}
-                                        value={data.description}
-                                        onChange={(e) =>setData("description",e.target.value)}
-                                    />
+                                    {/* HG */}
+                                    <div className="col-span-6 flex items-center justify-self-center space-x-2">
+                                        <Label>HG</Label>
+                                        <Switch
+                                            checked={data.hg}
+                                            onCheckedChange={(checked) =>setData("hg", checked)}
+                                        />
+                                    </div>
 
-                                    {errors.description && (
-                                        <p className="mt-1 text-sm text-destructive">
-                                            {errors.description}
-                                        </p>
-                                    )}
-                                </div>
+                                    {/* Description */}
+                                    <div className="col-span-12">
+                                        <Label>Description</Label>
+                                        <Textarea
+                                            rows={5}
+                                            value={data.description}
+                                            onChange={(e) =>setData("description",e.target.value)}
+                                        />
 
-                                {/* Notes */}
-                                    <div>
+                                        {errors.description && (
+                                            <p className="mt-1 text-sm text-destructive">
+                                                {errors.description}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* Notes */}
+                                    <div className="col-span-12">
                                         <Label>Notes</Label>
                                         <Textarea
                                             rows={4}
@@ -264,7 +304,10 @@ export default function AddGameModal({
                         <Button
                             type="button"
                             variant="outline"
-                            onClick={() => onOpenChange(false)}
+                            onClick={() => {
+                                reset();
+                                onOpenChange(false)
+                            }}
                             disabled={processing}
                         >
                             Cancel

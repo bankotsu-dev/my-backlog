@@ -12,7 +12,7 @@ class StoreGameRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,18 @@ class StoreGameRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
-        ];
-    }
+            'user_id' => 'required|exists:users,id',
+            'title' => 'required|max:255',
+            'status' => 'required|in:Backlog,Playing,Completed,Paused,Dropped',
+            'description' => 'nullable|max:64000',
+            'notes' => 'nullable|max:64000',
+            'cover_img' => 'nullable|image|max:1024',
+            'background_img' => 'nullable|image|max:1024',
+            'developer' => 'nullable|max:255',
+            'publisher' => 'nullable|max:255',
+            'rating' => 'nullable|integer|min:0|max:5',
+            'hg' => 'required|boolean',
+            'version' => 'nullable|max:50',
+            ];
+        }
 }

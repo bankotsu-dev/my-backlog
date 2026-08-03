@@ -16,13 +16,15 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->string('status');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->text('notes')->nullable();
             $table->string('cover')->nullable();
+            $table->string('cover_public_id')->nullable();
             $table->string('background_image')->nullable();
+            $table->string('background_public_id')->nullable();
             $table->string('developer')->nullable();
             $table->string('publisher')->nullable();
-            $table->decimal('rating', 1, 1)->nullable();
+            $table->integer('rating')->nullable();
             $table->boolean('hg')->default(false);
             $table->string('version')->nullable();
             $table->timestamps();
