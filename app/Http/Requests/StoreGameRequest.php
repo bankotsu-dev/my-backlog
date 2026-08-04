@@ -35,6 +35,7 @@ class StoreGameRequest extends FormRequest
             'rating' => 'nullable|integer|min:0|max:5',
             'hg' => 'required|boolean',
             'version' => 'nullable|max:50',
+            'genres' => 'nullable|array|exists:game_genres,id',
             ];
         }
 }

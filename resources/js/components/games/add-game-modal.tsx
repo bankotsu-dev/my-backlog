@@ -1,23 +1,10 @@
 import { useForm } from "@inertiajs/react";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -25,18 +12,25 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { usePage } from "@inertiajs/react";
 import type { Auth } from "@/types";
+import MultiSelect from "@/components/games/multi-select";
 
+interface GameGenre {
+    id: number;
+    genre: string;
+}
 interface Props {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    gameGenres: GameGenre[];
 }
 
 interface GameForm {
-    [key: string]: string | number | boolean | File | null;
+    [key: string]: string | number | boolean | File | null | number[];
     user_id: number;
     title: string;
     status: string;
     description: string;
+    genres: number[];
     notes: string;
     cover_img: File | null;
     background_img: File | null;
@@ -50,6 +44,7 @@ interface GameForm {
 export default function AddGameModal({
     open,
     onOpenChange,
+    gameGenres,
 }: Props) {
     const { auth } = usePage<{ auth: Auth }>().props;
 
@@ -65,6 +60,7 @@ export default function AddGameModal({
         title: "",
         status: "Backlog",
         description: "",
+        genres: [] as number[],
         notes: "",
         cover_img: null as File | null,
         background_img: null as File | null,
@@ -99,7 +95,7 @@ export default function AddGameModal({
             open={open}
             onOpenChange={onOpenChange}
         >
-            <DialogContent className="max-w-6xl overflow-hidden p-0" onInteractOutside={(e) => e.preventDefault()}>
+            <DialogContent className="max-w-6xl h-[90vh] p-0 flex flex-col" onInteractOutside={(e) => e.preventDefault()}>
                 <DialogHeader className="border-b p-6">
                     <DialogTitle>
                         Add a new game
@@ -110,8 +106,8 @@ export default function AddGameModal({
                     </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={submit}>
-                    <ScrollArea className="max-h-[75vh]">
+                <form onSubmit={submit} className="flex-1 flex flex-col overflow-hidden">
+                    <ScrollArea className="flex-1">
                         <div className="grid grid-cols-12 gap-8 p-6">
                             {/* Cover */}
                             <div className="col-span-3">
@@ -227,6 +223,16 @@ export default function AddGameModal({
                                            const file = e.target.files?.[0];
                                            if (file) setData("background_img", file); 
                                         }}
+                                        />
+                                    </div>
+                                    <div className="col-span-2">
+                                        <Label>Genres</Label>
+                                        <MultiSelect
+                                            options={gameGenres}
+                                            value={data.genres}
+                                            onChange={(value) => setData("genres", value)}
+                                            getValue={(genre) => genre.id}
+                                            getLabel={(genre) => genre.genre}
                                         />
                                     </div>
                                 </div>

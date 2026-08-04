@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
+use App\Models\GameGenre;
 use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
@@ -15,7 +16,8 @@ class GameController extends Controller
     public function index()
     {
         return inertia('games/index', [
-            'games' => Game::all(),
+            'games' => Game::where('user_id', auth()->user()->id)->with('genres')->get(),
+            'gameGenres' => GameGenre::all(),
         ]);
     }
 
@@ -34,6 +36,7 @@ class GameController extends Controller
     {
         try {
             $game = Game::create($request->validated());
+            $game->genres()->sync($request->genres);
             // Upload image to Cloudinary
             $cover = null;
             if ($request->hasFile('cover_img')) {
