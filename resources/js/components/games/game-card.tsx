@@ -1,20 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-    Edit,
-    Eye,
-    MoreVertical,
-    Star,
-    Trash2,
-    Gamepad2,
-} from "lucide-react";
+import { Link, useForm } from '@inertiajs/react';
+import { Edit, Eye, Star, Trash2, Gamepad2 } from "lucide-react";
 
 interface GameGenre {
     id: number;
@@ -42,6 +30,15 @@ interface Props {
 }
 
 export default function GameCard({ game }: Props) {
+
+    const {processing, delete: destroy} = useForm();
+
+    const handleDelete = (id: number) => {
+        if (confirm('Are you sure you want to delete this game?')) {
+            destroy(route('games.destroy', id));
+        }
+    };
+
     return (
         <Card className="overflow-hidden p-0 transition hover:shadow-lg">
             <div className="flex">
@@ -50,7 +47,7 @@ export default function GameCard({ game }: Props) {
                         <img
                             src={game.cover}
                             alt={game.title}
-                            className="aspect-[2/3] h-full w-full object-cover"
+                            className="aspect-[2/3] h-full w-full object-fill"
                         />
                     ) : (
                         <Gamepad2 className="h-20 w-20 text-muted-foreground" />
@@ -69,38 +66,43 @@ export default function GameCard({ game }: Props) {
                             </p>
                         </div>
 
-                        <div className="flex items-center gap-3">
-                            <Badge className="bg-purple-500 text-white hover:bg-purple-700">
-                                {game.status}
-                            </Badge>
-
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
+                        <div className="flex flex-col items-end gap-3">
+                            <div className="flex items-center gap-2">
+                                <Link href={route('games.show', game.id)}>
                                     <Button
                                         size="icon"
                                         variant="ghost"
-                                    >
-                                        <MoreVertical className="h-4 w-4" />
+                                        title="View details"
+                                        className="hover:text-sky-400"
+                                        >
+                                        <Eye className="h-4 w-4" />
                                     </Button>
-                                </DropdownMenuTrigger>
+                                </Link>
 
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem>
-                                        <Eye className="mr-2 h-4 w-4" />
-                                        Details
-                                    </DropdownMenuItem>
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    title="Edit"
+                                    className="hover:text-amber-400"
+                                >
+                                    <Edit className="h-4 w-4" />
+                                </Button>
 
-                                    <DropdownMenuItem>
-                                        <Edit className="mr-2 h-4 w-4" />
-                                        Edit
-                                    </DropdownMenuItem>
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="hover:text-destructive"
+                                    title="Delete"
+                                    onClick={() => handleDelete(game.id)}
+                                    disabled={processing}
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                </Button>
+                            </div>
 
-                                    <DropdownMenuItem className="text-red-500">
-                                        <Trash2 className="mr-2 h-4 w-4" />
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <Badge className="bg-purple-500 text-white hover:bg-purple-600">
+                                {game.status}
+                            </Badge>
                         </div>
                     </div>
 

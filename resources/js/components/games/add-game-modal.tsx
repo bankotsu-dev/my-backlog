@@ -13,6 +13,8 @@ import { toast } from "sonner";
 import { usePage } from "@inertiajs/react";
 import type { Auth } from "@/types";
 import MultiSelect from "@/components/games/multi-select";
+import { Gamepad2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger, } from "@/components/ui/tabs";
 
 interface GameGenre {
     id: number;
@@ -33,7 +35,9 @@ interface GameForm {
     genres: number[];
     notes: string;
     cover_img: File | null;
+    cover_url: string;
     background_img: File | null;
+    background_url: string;
     developer: string;
     publisher: string;
     rating: number;
@@ -63,7 +67,9 @@ export default function AddGameModal({
         genres: [] as number[],
         notes: "",
         cover_img: null as File | null,
+        cover_url: "",
         background_img: null as File | null,
+        background_url: "",
         developer: "",
         publisher: "",
         rating: 0,
@@ -90,6 +96,8 @@ export default function AddGameModal({
         });
     }
 
+    const coverPreview = data.cover_img ? URL.createObjectURL(data.cover_img) : data.cover_url || null;
+
     return (
         <Dialog
             open={open}
@@ -112,32 +120,59 @@ export default function AddGameModal({
                             {/* Cover */}
                             <div className="col-span-3">
                                 <div className="aspect-[2/3] overflow-hidden rounded-xl border bg-muted">
-                                    {data.cover_img ? (
+                                    {coverPreview ? (
                                         <img
-                                            src={data.cover_img ? URL.createObjectURL(data.cover_img) : ""}
+                                            src={coverPreview}
                                             className="h-full w-full object-cover"
                                         />
-                                        ) : (
-                                        <div className="flex h-full items-center justify-center text-muted-foreground">
-                                            ...
+                                    ) : (
+                                        <div className="flex h-full items-center justify-center">
+                                            <Gamepad2 className="h-20 w-20 text-muted-foreground/40"/>
                                         </div>
                                     )}
                                 </div>
 
                                 <div className="mt-4">
-                                    <Label>Cover URL</Label>
-                                    <Input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => {
-                                           const file = e.target.files?.[0];
-                                           if (file) setData("cover_img", file); 
-                                        }}
-                                    />
+                                    <Label>Cover</Label>
+                                    <Tabs defaultValue="Upload">
+                                        <TabsList>
+                                            <TabsTrigger value="Upload">Upload</TabsTrigger>
+                                            <TabsTrigger value="URL">URL</TabsTrigger>
+                                        </TabsList>
+                                        <TabsContent value="Upload">
+                                            <Input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    setData("cover_img", file ?? null);
+                                                    if (file) setData("cover_url", "");
+                                                }}
+                                            />
+                                        </TabsContent>
+                                        <TabsContent value="URL">
+                                            <Input
+                                                placeholder="https://..."
+                                                value={data.cover_url}
+                                                onChange={(e) => {
+                                                    setData("cover_url", e.target.value);
+                                                    if (e.target.value) {
+                                                        setData("cover_img", null);
+                                                    }
+                                                }}
+                                            />
+                                        </TabsContent>
+                                    </Tabs>
+                                    
 
                                     {errors.cover_img && (
                                         <p className="mt-1 text-sm text-destructive">
                                             {errors.cover_img}
+                                        </p>
+                                    )}
+                                    {errors.cover_url && (
+                                        <p className="mt-1 text-sm text-destructive">
+                                            {errors.cover_url}
                                         </p>
                                     )}
                                 </div>
@@ -215,15 +250,36 @@ export default function AddGameModal({
                                     </div>
 
                                     <div className="col-span-2">
-                                        <Label>Background URL</Label>
-                                        <Input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(e) => {
-                                           const file = e.target.files?.[0];
-                                           if (file) setData("background_img", file); 
-                                        }}
-                                        />
+                                        <Label>Background Image</Label>
+                                        <Tabs defaultValue="Upload">
+                                            <TabsList>
+                                                <TabsTrigger value="Upload">Upload</TabsTrigger>
+                                                <TabsTrigger value="URL">URL</TabsTrigger>
+                                            </TabsList>
+                                            <TabsContent value="Upload">
+                                                <Input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files?.[0];
+                                                        setData("background_img", file ?? null);
+                                                        if (file) setData("background_url", "");
+                                                    }}
+                                                />
+                                            </TabsContent>
+                                            <TabsContent value="URL">
+                                                <Input
+                                                    placeholder="https://..."
+                                                    value={data.background_url}
+                                                    onChange={(e) => {
+                                                        setData("background_url", e.target.value);
+                                                        if (e.target.value) {
+                                                            setData("background_img", null);
+                                                        }
+                                                    }}
+                                                />
+                                            </TabsContent>
+                                        </Tabs>
                                     </div>
                                     <div className="col-span-2">
                                         <Label>Genres</Label>

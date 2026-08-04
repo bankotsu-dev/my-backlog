@@ -42,18 +42,30 @@ class GameController extends Controller
             if ($request->hasFile('cover_img')) {
                 $cover = Cloudinary::uploadApi()->upload($request->file('cover_img')->getRealPath(), 
                 ['folder' => 'backlist/'. $request->user()->id .'/games',]);
+                $game->update([
+                    'cover' => $cover['secure_url'] ?? null,
+                    'cover_public_id' => $cover['public_id'] ?? null,
+                ]);
             }
             $background = null;
             if ($request->hasFile('background_img')) {
                 $background = Cloudinary::uploadApi()->upload($request->file('background_img')->getRealPath(), 
                 ['folder' => 'backlist/'. $request->user()->id .'/games',]);
+                $game->update([
+                    'background_image' => $background['secure_url'] ?? null,
+                    'background_public_id' => $background['public_id'] ?? null,
+                ]);
             }
-            $game->update([
-                'cover' => $cover['secure_url'] ?? null,
-                'cover_public_id' => $cover['public_id'] ?? null,
-                'background_image' => $background['secure_url'] ?? null,
-                'background_public_id' => $background['public_id'] ?? null,
-            ]);
+            if($request->cover_url) {
+                $game->update([
+                    'cover' => $request->cover_url
+                ]);
+            }
+            if($request->background_url) {
+                $game->update([
+                    'background_image' => $request->background_url
+                ]);
+            }
             return redirect()->route('games.index')->with('success', 'Game created successfully.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage(),]);
@@ -65,7 +77,12 @@ class GameController extends Controller
      */
     public function show(Game $game)
     {
-        //
+        if ($game->user_id !== auth()->user()->id) {
+            return redirect()->route('games.index')->withError('error', 'You do not have permission to view this game.');
+        }
+        return inertia('games/show', [
+            'game' => $game->load('genres')
+        ]);
     }
 
     /**
@@ -89,6 +106,21 @@ class GameController extends Controller
      */
     public function destroy(Game $game)
     {
-        //
+        try {
+            if ($game->user_id !== auth()->user()->id) {
+                return redirect()->route('games.index')->withError('error', 'You do not have permission to delete this game.');
+            }
+            if ($game->cover_public_id) {
+                Cloudinary::uploadApi()->destroy($game->cover_public_id);
+            }
+            if ($game->background_public_id) {
+                Cloudinary::uploadApi()->destroy($game->background_public_id);
+            }
+            $game->delete();
+            return redirect()->route('games.index');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => $e->getMessage(),]);
+        }
+        
     }
 }
