@@ -7,6 +7,8 @@ use App\Models\GameGenre;
 use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class GameController extends Controller
 {
@@ -38,35 +40,35 @@ class GameController extends Controller
         try {
             $game = Game::create($request->validated());
             $game->genres()->sync($request->genres);
-            // Upload image to Cloudinary
-            $cover = null;
+            // Upload image to Backblaze
             if ($request->hasFile('cover_img')) {
-                $cover = Cloudinary::uploadApi()->upload($request->file('cover_img')->getRealPath(), 
-                ['folder' => 'backlist/'. $request->user()->id .'/games',]);
+                $uuid = (string) Str::uuid();
+                $extension = $request->file('cover_img')->extension();
+                $path = "games/". auth()->user()->id ."/{$uuid}.{$extension}";
+                Storage::disk('b2')->put(
+                    $path,
+                    file_get_contents($request->file('cover_img')->getRealPath())
+                );
                 $game->update([
-                    'cover' => $cover['secure_url'] ?? null,
-                    'cover_public_id' => $cover['public_id'] ?? null,
+                    'cover_public_id' => $path,
                 ]);
             }
-            $background = null;
             if ($request->hasFile('background_img')) {
-                $background = Cloudinary::uploadApi()->upload($request->file('background_img')->getRealPath(), 
-                ['folder' => 'backlist/'. $request->user()->id .'/games',]);
+                $uuid = (string) Str::uuid();
+                $extension = $request->file('background_img')->extension();
+                $path = "games/". auth()->user()->id ."/{$uuid}.{$extension}";
+                Storage::disk('b2')->put(
+                    $path,
+                    file_get_contents($request->file('background_img')->getRealPath())
+                );
                 $game->update([
-                    'background_image' => $background['secure_url'] ?? null,
-                    'background_public_id' => $background['public_id'] ?? null,
+                    'background_public_id' => $path,
                 ]);
             }
-            if($request->cover_url) {
-                $game->update([
-                    'cover' => $request->cover_url
-                ]);
-            }
-            if($request->background_url) {
-                $game->update([
-                    'background_image' => $request->background_url
-                ]);
-            }
+            // Save image url
+            if ( $request->cover_url) { $game->update([ 'cover' => $request->cover_url ]); }
+            if ( $request->background_url) { $game->update([ 'background_image' => $request->background_url ]); }
+            
             return redirect()->route('games.index')->with('success', 'Game created successfully.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage(),]);

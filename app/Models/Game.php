@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Storage;
 
 class Game extends Model
 {
@@ -30,6 +32,36 @@ class Game extends Model
     public function genres()
     {
         return $this->belongsToMany(GameGenre::class, 'game_gamegenre', 'game_id', 'genre_id');
+    }
+
+    protected function cover(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if( $this->cover_public_id) {
+                   return Storage::disk('b2')->temporaryUrl(
+                        $this->cover_public_id,
+                        now()->addMinutes(5)
+                    );
+                }
+                return $this->getRawOriginal('cover');
+            }
+        );
+    }
+
+    protected function backgroundImage(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if( $this->background_public_id) {
+                   return Storage::disk('b2')->temporaryUrl(
+                        $this->background_public_id,
+                        now()->addMinutes(5)
+                    );
+                }
+                return $this->getRawOriginal('background_image');
+            }
+        );
     }
 
 }
