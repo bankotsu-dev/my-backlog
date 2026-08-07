@@ -34,6 +34,7 @@ class GameController extends Controller
      */
     public function store(StoreGameRequest $request)
     {
+        $request->validated();
         try {
             $game = Game::create($request->validated());
             $game->genres()->sync($request->genres);
@@ -90,7 +91,13 @@ class GameController extends Controller
      */
     public function edit(Game $game)
     {
-        //
+        if ($game->user_id !== auth()->user()->id) {
+            return redirect()->route('games.index')->withError('error', 'You do not have permission to edit this game.');
+        }
+        return inertia('games/edit', [
+            'game' => $game->load('genres'),
+            'gameGenres' => GameGenre::all(),
+        ]);
     }
 
     /**
@@ -98,7 +105,62 @@ class GameController extends Controller
      */
     public function update(UpdateGameRequest $request, Game $game)
     {
-        //
+        if ($game->user_id !== auth()->user()->id) {
+            return redirect()->route('games.index')->withError('error', 'You do not have permission to edit this game.');
+        }
+        try {
+            $cover = null;
+            $background = null;
+            $game->update($request->all());
+            $game->genres()->sync($request->genres);
+            if( $request->cover_url != $game->cover) {
+                if( $game->cover_public_id) {
+                    Cloudinary::uploadApi()->destroy($game->cover_public_id);
+                    $game->update([
+                        'cover_public_id' => null
+                    ]);
+                }
+                $game->update([
+                    'cover' => $request->cover_url
+                ]);
+            }
+            if( $request->background_url != $game->background_image) {
+                if ($game->background_public_id) {
+                    Cloudinary::uploadApi()->destroy($game->background_public_id);
+                    $game->update([
+                        'background_public_id' => null
+                    ]);
+                }
+                $game->update([
+                    'background_image' => $request->background_url
+                ]);
+            }
+            if( $request->hasFile('cover_img') ){
+                if( $game->cover_public_id) {
+                    Cloudinary::uploadApi()->destroy($game->cover_public_id);
+                }
+                $cover = Cloudinary::uploadApi()->upload($request->file('cover_img')->getRealPath(), 
+                ['folder' => 'backlist/'. $request->user()->id .'/games',]);
+                $game->update([
+                    'cover' => $cover['secure_url'] ?? null,
+                    'cover_public_id' => $cover['public_id'] ?? null,
+                ]);
+            }
+            if ($request->hasFile('background_img')) {
+                if ($game->background_public_id) {
+                    Cloudinary::uploadApi()->destroy($game->background_public_id);
+                }
+                $background = Cloudinary::uploadApi()->upload($request->file('background_img')->getRealPath(), 
+                ['folder' => 'backlist/'. $request->user()->id .'/games',]);
+                $game->update([
+                    'background_image' => $background['secure_url'] ?? null,
+                    'background_public_id' => $background['public_id'] ?? null,
+                ]);
+            }
+            return redirect()->route('games.index')->with('success', 'Game updated successfully.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => $e->getMessage(),]);
+        }
     }
 
     /**
@@ -106,10 +168,10 @@ class GameController extends Controller
      */
     public function destroy(Game $game)
     {
+        if ($game->user_id !== auth()->user()->id) {
+            return redirect()->route('games.index')->withError('error', 'You do not have permission to delete this game.');
+        }
         try {
-            if ($game->user_id !== auth()->user()->id) {
-                return redirect()->route('games.index')->withError('error', 'You do not have permission to delete this game.');
-            }
             if ($game->cover_public_id) {
                 Cloudinary::uploadApi()->destroy($game->cover_public_id);
             }

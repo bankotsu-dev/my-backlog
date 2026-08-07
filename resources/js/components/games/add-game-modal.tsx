@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { usePage } from "@inertiajs/react";
 import type { Auth } from "@/types";
 import MultiSelect from "@/components/games/multi-select";
-import { Gamepad2 } from "lucide-react";
+import { Gamepad2, RotateCcw } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger, } from "@/components/ui/tabs";
 
 interface GameGenre {
@@ -77,7 +77,7 @@ export default function AddGameModal({
         version: "",
     });
 
-    function submit(e:React.FormEvent<HTMLFormElement>) {
+    function handleSubmit(e:React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         post(route("games.store"), {
@@ -98,6 +98,16 @@ export default function AddGameModal({
 
     const coverPreview = data.cover_img ? URL.createObjectURL(data.cover_img) : data.cover_url || null;
 
+    function restartBackground() {
+        setData("background_img", null);
+        setData("background_url", '');
+    }
+
+    function restartCover() {
+        setData("cover_img", null);
+        setData("cover_url", '');
+    }
+
     return (
         <Dialog
             open={open}
@@ -114,7 +124,7 @@ export default function AddGameModal({
                     </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={submit} className="flex-1 flex flex-col overflow-hidden">
+                <form onSubmit={handleSubmit} className="flex-1 flex flex-col overflow-hidden">
                     <ScrollArea className="flex-1">
                         <div className="grid grid-cols-12 gap-8 p-6">
                             {/* Cover */}
@@ -123,7 +133,7 @@ export default function AddGameModal({
                                     {coverPreview ? (
                                         <img
                                             src={coverPreview}
-                                            className="h-full w-full object-cover"
+                                            className="h-full w-full object-fill"
                                         />
                                     ) : (
                                         <div className="flex h-full items-center justify-center">
@@ -134,36 +144,57 @@ export default function AddGameModal({
 
                                 <div className="mt-4">
                                     <Label>Cover</Label>
-                                    <Tabs defaultValue="Upload">
+                                    <Tabs defaultValue="URL">
                                         <TabsList>
-                                            <TabsTrigger value="Upload">Upload</TabsTrigger>
                                             <TabsTrigger value="URL">URL</TabsTrigger>
+                                            <TabsTrigger value="Upload">Upload</TabsTrigger>
                                         </TabsList>
-                                        <TabsContent value="Upload">
-                                            <Input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    setData("cover_img", file ?? null);
-                                                    if (file) setData("cover_url", "");
-                                                }}
-                                            />
-                                        </TabsContent>
                                         <TabsContent value="URL">
-                                            <Input
-                                                placeholder="https://..."
-                                                value={data.cover_url}
-                                                onChange={(e) => {
-                                                    setData("cover_url", e.target.value);
-                                                    if (e.target.value) {
-                                                        setData("cover_img", null);
-                                                    }
-                                                }}
-                                            />
+                                            <div className="flex items-center gap-0">
+                                                <Input
+                                                    placeholder="https://..."
+                                                    value={data.cover_url}
+                                                    onChange={(e) => {
+                                                        setData("cover_url", e.target.value);
+                                                        if (e.target.value) {
+                                                            setData("cover_img", null);
+                                                        }
+                                                    }}
+                                                    />
+                                                <Button type="button" className="rounded-l-none border-l" variant="ghost" onClick={() => restartCover()}>
+                                                    <RotateCcw />
+                                                </Button>
+                                            </div>
+                                        </TabsContent>
+                                        <TabsContent value="Upload">
+                                            <div className="flex items-center gap-0">
+                                                <Button type="button" asChild size="sm">
+                                                    <label htmlFor="cover-img">
+                                                        Select image
+                                                    </label>
+                                                </Button>
+                                                <span className="text-sm text-muted-foreground truncate pl-2 pr-2">
+                                                    {data.cover_img instanceof File
+                                                        ? data.cover_img.name
+                                                        : "No file selected"}
+                                                </span>
+                                                <Button type="button" className="rounded-l-none border-l" variant="ghost" onClick={() => restartCover()}>
+                                                    <RotateCcw />
+                                                </Button>
+                                                <Input
+                                                    id="cover-img"
+                                                    className="hidden"
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files?.[0];
+                                                        setData("cover_img", file ?? null);
+                                                        if (file) setData("cover_url", "");
+                                                    }}
+                                                />
+                                            </div>
                                         </TabsContent>
                                     </Tabs>
-                                    
 
                                     {errors.cover_img && (
                                         <p className="mt-1 text-sm text-destructive">
@@ -251,22 +282,11 @@ export default function AddGameModal({
 
                                     <div className="col-span-2">
                                         <Label>Background Image</Label>
-                                        <Tabs defaultValue="Upload">
+                                        <Tabs defaultValue="URL">
                                             <TabsList>
-                                                <TabsTrigger value="Upload">Upload</TabsTrigger>
                                                 <TabsTrigger value="URL">URL</TabsTrigger>
+                                                <TabsTrigger value="Upload">Upload</TabsTrigger>
                                             </TabsList>
-                                            <TabsContent value="Upload">
-                                                <Input
-                                                    type="file"
-                                                    accept="image/*"
-                                                    onChange={(e) => {
-                                                        const file = e.target.files?.[0];
-                                                        setData("background_img", file ?? null);
-                                                        if (file) setData("background_url", "");
-                                                    }}
-                                                />
-                                            </TabsContent>
                                             <TabsContent value="URL">
                                                 <Input
                                                     placeholder="https://..."
@@ -279,8 +299,46 @@ export default function AddGameModal({
                                                     }}
                                                 />
                                             </TabsContent>
+                                            <TabsContent value="Upload">
+                                                <Button type="button" asChild size="sm">
+                                                    <label htmlFor="background-img">
+                                                        Select image
+                                                    </label>
+                                                </Button>
+                                                <span className="text-sm text-muted-foreground truncate pl-2 pr-2">
+                                                    {data.background_img instanceof File
+                                                        ? data.background_img.name
+                                                        : "No file selected"}
+                                                </span>
+                                                <Button type="button" className="rounded-l-none border-l" variant="ghost" onClick={() => restartBackground()}>
+                                                    <RotateCcw />
+                                                </Button>
+                                                <Input
+                                                    id="background-img"
+                                                    className="hidden"
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files?.[0];
+                                                        setData("background_img", file ?? null);
+                                                        if (file) setData("background_url", "");
+                                                    }}
+                                                />
+                                            </TabsContent>
                                         </Tabs>
+
+                                        {errors.background_url && (
+                                            <p className="mt-1 text-sm text-destructive">
+                                                {errors.background_url}
+                                            </p>
+                                        )}
+                                        {errors.background_img && (
+                                            <p className="mt-1 text-sm text-destructive">
+                                                {errors.background_img}
+                                            </p>
+                                        )}
                                     </div>
+
                                     <div className="col-span-2">
                                         <Label>Genres</Label>
                                         <MultiSelect

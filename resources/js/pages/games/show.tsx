@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -46,7 +46,7 @@ export default function GameShow({
             href: '#',
         },
     ];
-    const heroImage = game.background_image ?? game.cover;
+    const heroImage = game.background_image ?? '';
 
     const {processing, delete: destroy} = useForm();
 
@@ -68,9 +68,9 @@ export default function GameShow({
                             className="h-full w-full object-fill"
                         />
                     )}
-                    <div className="absolute inset-0 bg-black/30" />
+                    <div className="absolute inset-0 bg-black/10" />
                 </div>
-                <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-12">
+                <div className="mx-auto flex min-h-screen flex-col px-6 py-12">
                     {/* HERO */}
                     <div className="mt-auto flex items-start gap-10">
                         {/* Cover */}
@@ -119,10 +119,12 @@ export default function GameShow({
                                 </Badge>
                             </div>
                             <div className="mt-8 flex gap-3">
-                                <Button variant="secondary">
-                                    <Edit className="mr-2 h-4 w-4" />
-                                    Edit
-                                </Button>
+                                <Link href={route('games.edit', game.id)}>
+                                    <Button variant="secondary">
+                                        <Edit className="mr-2 h-4 w-4" />
+                                        Edit
+                                    </Button>
+                                </Link>
                                 <Button 
                                     variant="destructive"
                                     onClick={() => handleDelete(game.id)}
@@ -138,7 +140,7 @@ export default function GameShow({
                     {/* CARDS */}
                     <div className="mt-8 grid grid-cols-12 gap-8 pb-4">
                         <Card className="col-span-3 bg-background/0">
-                            <Card className="col-span-3 h-fit bg-background/0 backdrop-blur-xs text-white">
+                            <Card className="col-span-3 h-fit bg-background/0 backdrop-blur-sm text-white">
                                 <CardHeader>
                                     <CardTitle>
                                         Details
@@ -208,30 +210,35 @@ export default function GameShow({
                         </Card>
                         <Card className="col-span-9 bg-background/0 border-0">
                             <div className="col-span-9 space-y-6">
-                                <Card className="bg-background/0 backdrop-blur-xs text-white">
-                                    <CardHeader>
-                                        <CardTitle>
-                                            Description
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="whitespace-pre-line leading-8">
-                                            {game.description || "No description."}
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                                <Card className="bg-background/0 backdrop-blur-xs text-white">
-                                    <CardHeader>
-                                        <CardTitle>
-                                            Notes
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="whitespace-pre-line leading-8">
-                                            {game.notes || "No notes."}
-                                        </p>
-                                    </CardContent>
-                                </Card>
+                                {game.description && (
+                                    <Card className="bg-background/0 backdrop-blur-sm text-white">
+                                        <CardHeader>
+                                            <CardTitle>
+                                                Description
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p className="whitespace-pre-line leading-8">
+                                                {game.description}
+                                            </p>
+                                        </CardContent>
+                                    </Card>
+                                )}
+                                
+                                {game.notes && (
+                                    <Card className="bg-background/0 backdrop-blur-sm text-white">
+                                        <CardHeader>
+                                            <CardTitle>
+                                                Notes
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p className="whitespace-pre-line leading-8">
+                                                {game.notes}
+                                            </p>
+                                        </CardContent>
+                                    </Card>
+                                )}
                             </div>
                         </Card>
                     </div>
