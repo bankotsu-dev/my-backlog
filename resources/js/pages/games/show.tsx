@@ -6,10 +6,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Edit, Gamepad2, Star, Trash2 } from "lucide-react";
 import { type BreadcrumbItem } from '@/types';
+import GameGallery from '@/components/games/game-gallery';
 
 interface GameGenre {
     id: number;
     genre: string;
+}
+
+interface Image {
+    id: number;
+    game_id: number;
+    source: string;
+    url: string;
+    path: string;
 }
 
 interface Game {
@@ -26,6 +35,7 @@ interface Game {
     hg: boolean;
     version: string | null;
     genres: GameGenre[];
+    images: Image[];
 }
 
 interface Props {
@@ -136,110 +146,96 @@ export default function GameShow({
                             </div>
                         </div>
                     </div>
-
                     {/* CARDS */}
                     <div className="mt-8 grid grid-cols-12 gap-8 pb-4">
-                        <Card className="col-span-3 bg-background/0 ">
-                            <Card className="col-span-3 h-fit bg-black/50 backdrop-blur-xs text-violet-400">
-                                <CardHeader>
-                                    <CardTitle className="text-white">
-                                        Details
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-5">
-                                    <div>
-                                        <p className="text-sm text-white">
-                                            Status
-                                        </p>
-                                        <p>{game.status}</p>
+                        {/* DETAILS */}
+                        <Card className="col-span-12 lg:col-span-3 h-fit bg-black/50 backdrop-blur-xs text-violet-400">
+                            <CardHeader>
+                                <CardTitle className="text-white">Details</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-5">
+                                <div>
+                                    <p className="text-sm text-white">Status</p>
+                                    <p>{game.status}</p>
+                                </div>
+                                <Separator />
+                                <div>
+                                    <p className="text-sm text-white">Developer</p>
+                                    <p>{game.developer || "-"}</p>
+                                </div>
+                                <Separator />
+                                <div>
+                                    <p className="text-sm text-white">Publisher</p>
+                                    <p>{game.publisher || "-"}</p>
+                                </div>
+                                <Separator />
+                                <div>
+                                    <p className="text-sm text-white">Version</p>
+                                    <p>{game.version || "-"}</p>
+                                </div>
+                                <Separator />
+                                <div>
+                                    <p className="text-sm text-white">Genres</p>
+                                    <div className="mt-2 flex flex-wrap gap-2">
+                                        {game.genres.map((genre) => (
+                                            <Badge
+                                                key={genre.id}
+                                                className="bg-black text-violet-400 hover:bg-black"
+                                            >
+                                                {genre.genre}
+                                            </Badge>
+                                        ))}
                                     </div>
-                                    <Separator />
-                                    <div>
-                                        <p className="text-sm text-white">
-                                            Developer
-                                        </p>
-                                        <p>{game.developer || "-"}</p>
-                                    </div>
-                                    <Separator />
-                                    <div>
-                                        <p className="text-sm text-white">
-                                            Publisher
-                                        </p>
-                                        <p>{game.publisher || "-"}</p>
-                                    </div>
-                                    <Separator />
-                                    <div>
-                                        <p className="text-sm text-white">
-                                            Version
-                                        </p>
-                                        <p>{game.version || "-"}</p>
-                                    </div>
-                                    <Separator />
-                                    <div>
-                                        <p className="text-sm text-white">
-                                            Genres
-                                        </p>
-                                        <div className="mt-2 flex flex-wrap gap-2">
-                                            {game.genres.map((genre) => (
-                                                <Badge
-                                                    key={genre.id}
-                                                    className="text-violet-400 bg-black hover:bg-black"
-                                                >
-                                                    {genre.genre}
-                                                </Badge>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <Separator />
-                                    <div>
-                                        <p className="text-sm text-white">
-                                            Rating
-                                        </p>
-                                        <p className="flex items-center gap-1">{game.rating}/5 <Star className="h-5 w-5 fill-current"/></p>
-                                    </div>
-                                    <Separator />
-                                    <div>
-                                        <p className="text-sm text-white">
-                                            HG
-                                        </p>
-                                        <p>{game.hg ? "Yes" : "No"}</p>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                                </div>
+                                <Separator />
+                                <div>
+                                    <p className="text-sm text-white">Rating</p>
+                                    <p className="flex items-center gap-1">
+                                        {game.rating}/5
+                                        <Star className="h-5 w-5 fill-current" />
+                                    </p>
+                                </div>
+                                <Separator />
+                                <div>
+                                    <p className="text-sm text-white">HG</p>
+                                    <p>{game.hg ? "Yes" : "No"}</p>
+                                </div>
+                            </CardContent>
                         </Card>
-                        <Card className="col-span-9 bg-background/0 border-0">
-                            <div className="col-span-9 space-y-6">
-                                {game.description && (
-                                    <Card className="bg-black/50 backdrop-blur-xs text-white">
-                                        <CardHeader>
-                                            <CardTitle>
-                                                Description
-                                            </CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <p className="whitespace-pre-line leading-8">
-                                                {game.description}
-                                            </p>
-                                        </CardContent>
-                                    </Card>
-                                )}
-                                
-                                {game.notes && (
-                                    <Card className="bg-black/50 backdrop-blur-xs text-white">
-                                        <CardHeader>
-                                            <CardTitle>
-                                                Notes
-                                            </CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <p className="whitespace-pre-line leading-8">
-                                                {game.notes}
-                                            </p>
-                                        </CardContent>
-                                    </Card>
-                                )}
-                            </div>
-                        </Card>
+
+                        {/* RIGHT COLUMN */}
+                        <div className="col-span-12 lg:col-span-9 space-y-6">
+                            {/* DESCRIPTION */}
+                            {game.description && (
+                                <Card className="bg-black/50 backdrop-blur-xs text-white">
+                                    <CardHeader>
+                                        <CardTitle>Description</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="whitespace-pre-line leading-8">
+                                            {game.description}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            )}
+
+                            {/* NOTES */}
+                            {game.notes && (
+                                <Card className="bg-black/50 backdrop-blur-xs text-white">
+                                    <CardHeader>
+                                        <CardTitle>Notes</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="whitespace-pre-line leading-8">
+                                            {game.notes}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            )}
+
+                            {/* GALLERY */}
+                            <GameGallery images={game.images} />
+                        </div>
                     </div>
                 </div>
             </section>

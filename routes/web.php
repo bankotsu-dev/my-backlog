@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\GameImageController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -20,6 +21,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('games/{game}', [\App\Http\Controllers\GameController::class, 'destroy'])->name('games.destroy');
     Route::get('games/edit/{game}', [\App\Http\Controllers\GameController::class, 'edit'])->name('games.edit');
     Route::put('games/{game}', [\App\Http\Controllers\GameController::class, 'update'])->name('games.update');
+
+    //GameImages
+    Route::post('games/images', [\App\Http\Controllers\GameImageController::class, 'store'])->name('game-images.store');
+    Route::delete('games/images/{gameImage}', [\App\Http\Controllers\GameImageController::class, 'destroy'])->name('game-images.destroy');
 });
 
 require __DIR__.'/settings.php';

@@ -6,7 +6,6 @@ use App\Models\Game;
 use App\Models\GameGenre;
 use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -84,7 +83,7 @@ class GameController extends Controller
             return redirect()->route('games.index')->withError('error', 'You do not have permission to view this game.');
         }
         return inertia('games/show', [
-            'game' => $game->load('genres')
+            'game' => $game->load('genres')->load('images'),
         ]);
     }
 

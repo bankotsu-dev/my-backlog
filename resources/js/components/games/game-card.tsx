@@ -79,16 +79,16 @@ export default function GameCard({ game }: Props) {
                                     </Button>
                                 </Link>
 
-                            <Link href={route('games.edit', game.id)}>
-                                <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    title="Edit"
-                                    className="hover:text-amber-400"
-                                >
-                                    <Edit className="h-4 w-4" />
-                                </Button>
-                            </Link>
+                                <Link href={route('games.edit', game.id)}>
+                                    <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        title="Edit"
+                                        className="hover:text-amber-400"
+                                    >
+                                        <Edit className="h-4 w-4" />
+                                    </Button>
+                                </Link>
 
                                 <Button
                                     size="icon"
