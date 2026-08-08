@@ -140,7 +140,7 @@ export default function GameShow({
                     {/* CARDS */}
                     <div className="mt-8 grid grid-cols-12 gap-8 pb-4">
                         <Card className="col-span-3 bg-background/0 ">
-                            <Card className="col-span-3 h-fit bg-black/60 dark:bg-black/40 backdrop-blur-xs text-violet-400">
+                            <Card className="col-span-3 h-fit bg-black/50 backdrop-blur-xs text-violet-400">
                                 <CardHeader>
                                     <CardTitle className="text-white">
                                         Details
@@ -210,7 +210,7 @@ export default function GameShow({
                         <Card className="col-span-9 bg-background/0 border-0">
                             <div className="col-span-9 space-y-6">
                                 {game.description && (
-                                    <Card className="bg-black/60 dark:bg-black/40 backdrop-blur-xs text-white">
+                                    <Card className="bg-black/50 backdrop-blur-xs text-white">
                                         <CardHeader>
                                             <CardTitle>
                                                 Description
@@ -225,7 +225,7 @@ export default function GameShow({
                                 )}
                                 
                                 {game.notes && (
-                                    <Card className="bg-black/60 dark:bg-black/40 backdrop-blur-xs text-white">
+                                    <Card className="bg-black/50 backdrop-blur-xs text-white">
                                         <CardHeader>
                                             <CardTitle>
                                                 Notes

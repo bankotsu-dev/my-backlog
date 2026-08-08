@@ -34,6 +34,11 @@ class Game extends Model
         return $this->belongsToMany(GameGenre::class, 'game_gamegenre', 'game_id', 'genre_id');
     }
 
+    public function images()
+    {
+        return $this->hasMany(GameImage::class);
+    }
+
     protected function cover(): Attribute
     {
         return Attribute::make(
