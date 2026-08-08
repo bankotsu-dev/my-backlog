@@ -28,15 +28,17 @@ class UpdateGameRequest extends FormRequest
             'description' => 'nullable|max:64000',
             'notes' => 'nullable|max:64000',
             'cover_img' => 'nullable|image|max:1024',
-            'cover_url' => 'nullable|url',
+            'cover_url' => 'nullable|url|max:255',
             'background_img' => 'nullable|image|max:1024',
-            'background_url' => 'nullable|url',
+            'background_url' => 'nullable|url|max:255',
             'developer' => 'nullable|max:255',
             'publisher' => 'nullable|max:255',
             'rating' => 'nullable|integer|min:0|max:5',
             'hg' => 'required|boolean',
             'version' => 'nullable|max:50',
             'genres' => 'nullable|array|exists:game_genres,id',
+            'updateCoverURL' => 'nullable|boolean',
+            'updateBackgroundURL' => 'nullable|boolean',
         ];
     }
 }

@@ -111,13 +111,11 @@ class GameController extends Controller
             return redirect()->route('games.index')->withError('error', 'You do not have permission to edit this game.');
         }
         try {
-            $cover = null;
-            $background = null;
             $game->update($request->all());
             $game->genres()->sync($request->genres);
-            if( $request->cover_url != $game->cover) {
+            if( $request->updateCoverURL ) {
                 if( $game->cover_public_id) {
-                    Cloudinary::uploadApi()->destroy($game->cover_public_id);
+                    Storage::disk('b2')->delete($game->cover_public_id);
                     $game->update([
                         'cover_public_id' => null
                     ]);
@@ -126,9 +124,9 @@ class GameController extends Controller
                     'cover' => $request->cover_url
                 ]);
             }
-            if( $request->background_url != $game->background_image) {
+            if( $request->updateBackgroundURL ) {
                 if ($game->background_public_id) {
-                    Cloudinary::uploadApi()->destroy($game->background_public_id);
+                    Storage::disk('b2')->delete($game->background_public_id);
                     $game->update([
                         'background_public_id' => null
                     ]);
@@ -139,24 +137,32 @@ class GameController extends Controller
             }
             if( $request->hasFile('cover_img') ){
                 if( $game->cover_public_id) {
-                    Cloudinary::uploadApi()->destroy($game->cover_public_id);
+                    Storage::disk('b2')->delete($game->cover_public_id);
                 }
-                $cover = Cloudinary::uploadApi()->upload($request->file('cover_img')->getRealPath(), 
-                ['folder' => 'backlist/'. $request->user()->id .'/games',]);
+                $uuid = (string) Str::uuid();
+                $extension = $request->file('cover_img')->extension();
+                $path = "games/". auth()->user()->id ."/{$uuid}.{$extension}";
+                Storage::disk('b2')->put(
+                    $path,
+                    file_get_contents($request->file('cover_img')->getRealPath())
+                );
                 $game->update([
-                    'cover' => $cover['secure_url'] ?? null,
-                    'cover_public_id' => $cover['public_id'] ?? null,
+                    'cover_public_id' => $path,
                 ]);
             }
             if ($request->hasFile('background_img')) {
                 if ($game->background_public_id) {
-                    Cloudinary::uploadApi()->destroy($game->background_public_id);
+                    Storage::disk('b2')->delete($game->background_public_id);
                 }
-                $background = Cloudinary::uploadApi()->upload($request->file('background_img')->getRealPath(), 
-                ['folder' => 'backlist/'. $request->user()->id .'/games',]);
+                $uuid = (string) Str::uuid();
+                $extension = $request->file('background_img')->extension();
+                $path = "games/". auth()->user()->id ."/{$uuid}.{$extension}";
+                Storage::disk('b2')->put(
+                    $path,
+                    file_get_contents($request->file('background_img')->getRealPath())
+                );
                 $game->update([
-                    'background_image' => $background['secure_url'] ?? null,
-                    'background_public_id' => $background['public_id'] ?? null,
+                    'background_public_id' => $path,
                 ]);
             }
             return redirect()->route('games.index')->with('success', 'Game updated successfully.');
@@ -175,10 +181,10 @@ class GameController extends Controller
         }
         try {
             if ($game->cover_public_id) {
-                Cloudinary::uploadApi()->destroy($game->cover_public_id);
+                Storage::disk('b2')->delete($game->cover_public_id);
             }
             if ($game->background_public_id) {
-                Cloudinary::uploadApi()->destroy($game->background_public_id);
+                Storage::disk('b2')->delete($game->background_public_id);
             }
             $game->delete();
             return redirect()->route('games.index');

@@ -63,12 +63,14 @@ export default function GameShow({
                 {/* Background */}
                 <div className="absolute inset-0 -z-10 overflow-hidden">
                     {heroImage && (
-                        <img
-                            src={heroImage}
-                            className="h-full w-full object-fill"
-                        />
+                        <>
+                            <img
+                                src={heroImage}
+                                className="h-full w-full object-fill"
+                                />
+                            <div className="absolute inset-0 bg-black/10" />
+                        </>
                     )}
-                    <div className="absolute inset-0 bg-black/10" />
                 </div>
                 <div className="mx-auto flex min-h-screen flex-col px-6 py-12">
                     {/* HERO */}
@@ -89,17 +91,15 @@ export default function GameShow({
                         </div>
                         {/* Información */}
                         <div className="flex-1">
-                            <h1 className="text-5xl font-bold text-white">
+                            <h1 className="text-5xl font-bold text-violet-700 [text-shadow:0_0_4px_white,0_0_6px_white]">
                                 {game.title}
                             </h1>
-                            <p className="mt-2 text-lg text-gray-300">
-                                {game.developer}
-                            </p>
+                            
                             <div className="mt-5 flex flex-wrap gap-2">
                                 {game.genres.map((genre) => (
                                     <Badge
                                         key={genre.id}
-                                        variant="secondary"
+                                        className="text-white dark:bg-black"
                                     >
                                         {genre.genre}
                                     </Badge>
@@ -114,13 +114,13 @@ export default function GameShow({
                                         {game.rating}/5
                                     </span>
                                 </div>
-                                <Badge className="bg-purple-500 text-white hover:bg-purple-600">
+                                <Badge className="bg-purple-500 text-white hover:bg-purple-500">
                                     {game.status}
                                 </Badge>
                             </div>
                             <div className="mt-8 flex gap-3">
                                 <Link href={route('games.edit', game.id)}>
-                                    <Button variant="secondary">
+                                    <Button>
                                         <Edit className="mr-2 h-4 w-4" />
                                         Edit
                                     </Button>
@@ -139,52 +139,51 @@ export default function GameShow({
 
                     {/* CARDS */}
                     <div className="mt-8 grid grid-cols-12 gap-8 pb-4">
-                        <Card className="col-span-3 bg-background/0">
-                            <Card className="col-span-3 h-fit bg-background/0 backdrop-blur-sm text-white">
+                        <Card className="col-span-3 bg-background/0 ">
+                            <Card className="col-span-3 h-fit bg-black/60 dark:bg-black/40 backdrop-blur-xs text-violet-400">
                                 <CardHeader>
-                                    <CardTitle>
+                                    <CardTitle className="text-white">
                                         Details
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-5">
                                     <div>
-                                        <p className="text-sm text-neutral-400 dark:text-neutral-300">
+                                        <p className="text-sm text-white">
                                             Status
                                         </p>
                                         <p>{game.status}</p>
                                     </div>
                                     <Separator />
                                     <div>
-                                        <p className="text-sm text-neutral-400 dark:text-neutral-300">
+                                        <p className="text-sm text-white">
                                             Developer
                                         </p>
                                         <p>{game.developer || "-"}</p>
                                     </div>
                                     <Separator />
                                     <div>
-                                        <p className="text-sm text-neutral-400 dark:text-neutral-300">
+                                        <p className="text-sm text-white">
                                             Publisher
                                         </p>
                                         <p>{game.publisher || "-"}</p>
                                     </div>
                                     <Separator />
                                     <div>
-                                        <p className="text-sm text-neutral-400 dark:text-neutral-300">
+                                        <p className="text-sm text-white">
                                             Version
                                         </p>
                                         <p>{game.version || "-"}</p>
                                     </div>
                                     <Separator />
                                     <div>
-                                        <p className="text-sm text-neutral-400 dark:text-neutral-300">
+                                        <p className="text-sm text-white">
                                             Genres
                                         </p>
                                         <div className="mt-2 flex flex-wrap gap-2">
                                             {game.genres.map((genre) => (
                                                 <Badge
                                                     key={genre.id}
-                                                    variant="outline"
-                                                    className="text-white"
+                                                    className="text-violet-400 bg-black hover:bg-black"
                                                 >
                                                     {genre.genre}
                                                 </Badge>
@@ -193,14 +192,14 @@ export default function GameShow({
                                     </div>
                                     <Separator />
                                     <div>
-                                        <p className="text-sm text-neutral-400 dark:text-neutral-300">
+                                        <p className="text-sm text-white">
                                             Rating
                                         </p>
-                                        <p>{game.rating}/5</p>
+                                        <p className="flex items-center gap-1">{game.rating}/5 <Star className="h-5 w-5 fill-current"/></p>
                                     </div>
                                     <Separator />
                                     <div>
-                                        <p className="text-sm text-neutral-400 dark:text-neutral-300">
+                                        <p className="text-sm text-white">
                                             HG
                                         </p>
                                         <p>{game.hg ? "Yes" : "No"}</p>
@@ -211,7 +210,7 @@ export default function GameShow({
                         <Card className="col-span-9 bg-background/0 border-0">
                             <div className="col-span-9 space-y-6">
                                 {game.description && (
-                                    <Card className="bg-background/0 backdrop-blur-sm text-white">
+                                    <Card className="bg-black/60 dark:bg-black/40 backdrop-blur-xs text-white">
                                         <CardHeader>
                                             <CardTitle>
                                                 Description
@@ -226,7 +225,7 @@ export default function GameShow({
                                 )}
                                 
                                 {game.notes && (
-                                    <Card className="bg-background/0 backdrop-blur-sm text-white">
+                                    <Card className="bg-black/60 dark:bg-black/40 backdrop-blur-xs text-white">
                                         <CardHeader>
                                             <CardTitle>
                                                 Notes

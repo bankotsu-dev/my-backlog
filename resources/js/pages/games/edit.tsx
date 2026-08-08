@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
@@ -53,7 +53,7 @@ interface Props {
 
 export default function Edit( { game, gameGenres } : Props) {
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, transform } = useForm({
         _method: "PUT",
         title: game.title,
         status: game.status,
@@ -69,6 +69,8 @@ export default function Edit( { game, gameGenres } : Props) {
         rating: game.rating,
         hg: game.hg,
         version: game.version ?? '',
+        updateCoverURL: false as boolean,
+        updateBackgroundURL: false as boolean,
     });
 
     const coverPreview = data.cover_img ? URL.createObjectURL(data.cover_img) : data.cover_url || null;
@@ -76,6 +78,19 @@ export default function Edit( { game, gameGenres } : Props) {
 
     function handleUpdate(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        
+        transform((data) => ({
+            ...data,
+            ...(data.cover_url === game.cover && {
+                cover_url: undefined,
+                updateCoverURL: false,
+            }),
+            ...(data.background_url === game.background_image && {
+                background_url: undefined,
+                updateBackgroundURL: false,
+            }),
+        }));
+
         post(route("games.update", game.id), {
             forceFormData: true,
             onError: (errors) => {
@@ -137,6 +152,7 @@ export default function Edit( { game, gameGenres } : Props) {
                                             value={data.cover_url}
                                             onChange={(e) => {
                                                 setData("cover_url", e.target.value);
+                                                setData("updateCoverURL", true);
                                                 if (e.target.value) {
                                                     setData("cover_img", null);
                                                 }
@@ -171,7 +187,9 @@ export default function Edit( { game, gameGenres } : Props) {
                                             onChange={(e) => {
                                                 const file = e.target.files?.[0];
                                                 setData("cover_img", file ?? null);
-                                                if (file) setData("cover_url", "");
+                                                if (file) {
+                                                    setData("cover_url", "");
+                                                }
                                             }}
                                         />
                                         <Button type="button" className="rounded-l-none border-l dark:bg-black dark:text-white dark:hover:bg-neutral-900" 
@@ -304,6 +322,7 @@ export default function Edit( { game, gameGenres } : Props) {
                                                 value={data.background_url}
                                                 onChange={(e) => {
                                                     setData("background_url", e.target.value);
+                                                    setData("updateBackgroundURL", true);
                                                     if (e.target.value) {
                                                         setData("background_img", null);
                                                     }
@@ -448,9 +467,12 @@ export default function Edit( { game, gameGenres } : Props) {
                             </div>
                         </div>
                         <div className="flex items-center justify-end gap-2">
-                            <Button type="button" disabled={processing}>
-                                Cancel
-                            </Button>
+                            <Link href={route("games.index")}>
+                                <Button type="button" disabled={processing}>
+                                    Cancel
+                                </Button>
+                            </Link>
+                            
                             <Button type="submit" disabled={processing}>
                                 Save
                             </Button>
