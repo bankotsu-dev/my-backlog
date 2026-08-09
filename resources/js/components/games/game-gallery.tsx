@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useForm } from '@inertiajs/react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, Plus } from "lucide-react";
 import GalleryImageViewer from "@/components/games/gallery-image-viewer";
+import AddImageModal from "@/components/games/add-image-modal";
 
 interface Image {
     id: number;
@@ -12,9 +14,10 @@ interface Image {
     url: string;
     path: string;
 }
-export default function GameGallery({ images }: { images: Image[] }) {
+export default function GameGallery({ images, gameId }: { images: Image[], gameId: number }) {
 
     const { processing, delete: destroy } = useForm();
+    const [open, setOpen] = useState(false);
 
     const handleDeleteImage = (imageId: number) => { 
         if (confirm('Are you sure you want to delete this image?')) { 
@@ -24,8 +27,21 @@ export default function GameGallery({ images }: { images: Image[] }) {
 
     return (
         <Card className="bg-black/50 backdrop-blur-xs text-white">
-            <CardHeader>
-                <CardTitle>Gallery</CardTitle>
+            <AddImageModal
+                open={open}
+                onOpenChange={setOpen}
+                gameId={gameId}
+            />
+            <CardHeader className="flex flex-row space-y-1.5 justify-between">
+                <CardTitle className="">Gallery</CardTitle>
+                <Button
+                    variant="ghost"
+                    title="View details"
+                    className="text-white hover:bg-violet-700 w-8 h-8"
+                    onClick={() => setOpen(true)}
+                    >
+                    <Plus className="!h-6 !w-6 stroke-3" />
+                </Button>
             </CardHeader>
             <CardContent>
                 <Carousel

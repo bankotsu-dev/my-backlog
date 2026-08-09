@@ -34,7 +34,7 @@ export default function GalleryImageViewer({
 
             {/* Fullscreen viewer */}
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="max-w-[95vw] border-0 bg-black/90 p-2 sm:max-w-[90vw]">
+                <DialogContent className="max-w-[95vw] border-0 bg-black/90 p-4 sm:max-w-[90vw]">
                     <DialogTitle className="sr-only">
                         {alt}
                     </DialogTitle>

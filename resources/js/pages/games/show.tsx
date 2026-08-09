@@ -124,13 +124,13 @@ export default function GameShow({
                                         {game.rating}/5
                                     </span>
                                 </div>
-                                <Badge className="bg-purple-500 text-white hover:bg-purple-500">
+                                <Badge className="bg-violet-500 text-white hover:bg-violet-500">
                                     {game.status}
                                 </Badge>
                             </div>
                             <div className="mt-8 flex gap-3">
                                 <Link href={route('games.edit', game.id)}>
-                                    <Button>
+                                    <Button className="hover:bg-violet-700 text-white bg-violet-500">
                                         <Edit className="mr-2 h-4 w-4" />
                                         Edit
                                     </Button>
@@ -234,7 +234,7 @@ export default function GameShow({
                             )}
 
                             {/* GALLERY */}
-                            <GameGallery images={game.images} />
+                            <GameGallery images={game.images} gameId={game.id} />
                         </div>
                     </div>
                 </div>
