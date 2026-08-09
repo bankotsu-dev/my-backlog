@@ -54,7 +54,7 @@ export default function MultiSelect<
     return (
 
         <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
+            <PopoverTrigger asChild className="mt-3">
                 <Button
                     type="button"
                     variant="outline"

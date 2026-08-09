@@ -139,7 +139,7 @@ export default function Edit( { game, gameGenres } : Props) {
 
                         <div className="mt-4">
                             <Label className="bg-white p-2 rounded-md dark:bg-black">Cover</Label>
-                            <Tabs defaultValue="URL">
+                            <Tabs defaultValue="URL" className="mt-3">
                                 <TabsList>
                                     <TabsTrigger value="URL">URL</TabsTrigger>
                                     <TabsTrigger value="Upload">Upload</TabsTrigger>
@@ -168,13 +168,13 @@ export default function Edit( { game, gameGenres } : Props) {
                                 <TabsContent value="Upload">
                                     <div className="flex items-center gap-0">
                                         <Button type="button" asChild 
-                                            className="bg-violet-500 hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-700 dark:text-white rounded-r-none p-1"
+                                            className="bg-violet-500 hover:bg-violet-700 text-white rounded-r-none p-1"
                                         >
                                             <label htmlFor="cover-img">
                                                 Select image
                                             </label>
                                         </Button>
-                                        <span className="text-neutral-300 truncate pl-2 pr-2 dark:bg-black h-10 text-center flex-1 flex items-center">
+                                        <span className="text-neutral-400 text-sm truncate pl-2 pr-2 dark:bg-black h-10 text-center flex-1 flex items-center">
                                             {data.cover_img instanceof File
                                                 ? data.cover_img.name
                                                 : "No file selected"}
@@ -221,6 +221,7 @@ export default function Edit( { game, gameGenres } : Props) {
                             <div className="col-span-2">
                                 <Label className="bg-white p-2 rounded-md dark:bg-black">Title</Label>
                                 <Input
+                                    className="mt-3"
                                     required
                                     value={data.title}
                                     onChange={(e) => setData("title", e.target.value)}
@@ -240,7 +241,7 @@ export default function Edit( { game, gameGenres } : Props) {
                                     value={data.status}
                                     onValueChange={(value) =>setData("status",value)}
                                 >
-                                    <SelectTrigger>
+                                    <SelectTrigger className="mt-3">
                                         <SelectValue />
                                     </SelectTrigger>
 
@@ -272,6 +273,7 @@ export default function Edit( { game, gameGenres } : Props) {
                             <div>
                                 <Label className="bg-white p-2 rounded-md dark:bg-black">Version</Label>
                                 <Input
+                                    className="mt-3"
                                     value={data.version}
                                     onChange={(e) => setData("version", e.target.value)}
                                 />
@@ -285,6 +287,7 @@ export default function Edit( { game, gameGenres } : Props) {
                             <div>
                                 <Label className="bg-white p-2 rounded-md dark:bg-black">Developer</Label>
                                 <Input
+                                    className="mt-3"
                                     value={data.developer}
                                     onChange={(e) => setData("developer", e.target.value)}
                                 />
@@ -298,6 +301,7 @@ export default function Edit( { game, gameGenres } : Props) {
                             <div>
                                 <Label className="bg-white p-2 rounded-md dark:bg-black">Publisher</Label>
                                 <Input
+                                    className="mt-3"
                                     value={data.publisher}
                                     onChange={(e) => setData("publisher", e.target.value)}
                                 />
@@ -310,7 +314,7 @@ export default function Edit( { game, gameGenres } : Props) {
 
                             <div className="col-span-2">
                                 <Label className="bg-white p-2 rounded-md dark:bg-black">Background Image</Label>
-                                <Tabs defaultValue="URL">
+                                <Tabs defaultValue="URL" className="mt-3">
                                     <TabsList>
                                         <TabsTrigger value="URL">URL</TabsTrigger>
                                         <TabsTrigger value="Upload">Upload</TabsTrigger>
@@ -318,6 +322,7 @@ export default function Edit( { game, gameGenres } : Props) {
                                     <TabsContent value="URL">
                                         <div className="flex items-center gap-0">
                                             <Input
+                                                className="rounded-r-none"
                                                 placeholder="https://..."
                                                 value={data.background_url}
                                                 onChange={(e) => {
@@ -338,13 +343,13 @@ export default function Edit( { game, gameGenres } : Props) {
                                     <TabsContent value="Upload">
                                         <div className="flex items-center gap-0">
                                             <Button type="button" asChild
-                                                className="bg-violet-500 hover:bg-violet-700 dark:bg-violet-500 dark:hover:bg-violet-700 dark:text-white rounded-r-none p-1"
+                                                className="bg-violet-500 hover:bg-violet-700 text-white rounded-r-none p-1"
                                             >
                                                 <label htmlFor="background-img">
                                                     Select image
                                                 </label>
                                             </Button>
-                                            <span className="text-neutral-300 truncate pl-2 pr-2 dark:bg-black h-10 text-center flex-1 flex items-center">
+                                            <span className="text-neutral-400 text-sm truncate pl-2 pr-2 dark:bg-black h-10 text-center flex-1 flex items-center">
                                                 {data.background_img instanceof File
                                                     ? data.background_img.name
                                                     : "No file selected"}
@@ -438,6 +443,7 @@ export default function Edit( { game, gameGenres } : Props) {
                             <div className="col-span-12">
                                 <Label className="bg-white p-2 rounded-md dark:bg-black">Description</Label>
                                 <Textarea
+                                    className="mt-3"
                                     rows={5}
                                     value={data.description}
                                     onChange={(e) =>setData("description",e.target.value)}
@@ -454,6 +460,7 @@ export default function Edit( { game, gameGenres } : Props) {
                             <div className="col-span-12">
                                 <Label className="bg-white p-2 rounded-md dark:bg-black">Notes</Label>
                                 <Textarea
+                                    className="mt-3"
                                     rows={4}
                                     value={data.notes}
                                     onChange={(e) => setData("notes",e.target.value)}
@@ -468,12 +475,20 @@ export default function Edit( { game, gameGenres } : Props) {
                         </div>
                         <div className="flex items-center justify-end gap-2">
                             <Link href={route("games.index")}>
-                                <Button type="button" disabled={processing}>
+                                <Button
+                                    className="hover:bg-neutral-700 text-white bg-neutral-500" 
+                                    type="button" 
+                                    disabled={processing}
+                                >
                                     Cancel
                                 </Button>
                             </Link>
                             
-                            <Button type="submit" disabled={processing}>
+                            <Button
+                                className="hover:bg-violet-700 text-white bg-violet-500" 
+                                type="submit" 
+                                disabled={processing}
+                            >
                                 Save
                             </Button>
                         </div>

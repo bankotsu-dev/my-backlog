@@ -152,6 +152,7 @@ export default function AddGameModal({
                                         <TabsContent value="URL">
                                             <div className="flex items-center gap-0">
                                                 <Input
+                                                    className="rounded-r-none"
                                                     placeholder="https://..."
                                                     value={data.cover_url}
                                                     onChange={(e) => {
@@ -168,7 +169,10 @@ export default function AddGameModal({
                                         </TabsContent>
                                         <TabsContent value="Upload">
                                             <div className="flex items-center gap-0">
-                                                <Button type="button" asChild size="sm">
+                                                <Button
+                                                    className="bg-violet-500 hover:bg-violet-700 text-white rounded-r-none p-1" 
+                                                    type="button" asChild size="sm"
+                                                >
                                                     <label htmlFor="cover-img">
                                                         Select image
                                                     </label>
@@ -288,31 +292,42 @@ export default function AddGameModal({
                                                 <TabsTrigger value="Upload">Upload</TabsTrigger>
                                             </TabsList>
                                             <TabsContent value="URL">
-                                                <Input
-                                                    placeholder="https://..."
-                                                    value={data.background_url}
-                                                    onChange={(e) => {
-                                                        setData("background_url", e.target.value);
-                                                        if (e.target.value) {
-                                                            setData("background_img", null);
-                                                        }
-                                                    }}
-                                                />
+                                                <div className="flex items-center gap-0">
+                                                    <Input
+                                                        className="rounded-r-none"
+                                                        placeholder="https://..."
+                                                        value={data.background_url}
+                                                        onChange={(e) => {
+                                                            setData("background_url", e.target.value);
+                                                            if (e.target.value) {
+                                                                setData("background_img", null);
+                                                            }
+                                                        }}
+                                                        />
+                                                    <Button type="button" className="rounded-l-none border-l" variant="ghost" onClick={() => restartBackground()}>
+                                                        <RotateCcw />
+                                                    </Button>
+                                                </div>
                                             </TabsContent>
                                             <TabsContent value="Upload">
-                                                <Button type="button" asChild size="sm">
-                                                    <label htmlFor="background-img">
-                                                        Select image
-                                                    </label>
-                                                </Button>
-                                                <span className="text-sm text-muted-foreground truncate pl-2 pr-2">
-                                                    {data.background_img instanceof File
-                                                        ? data.background_img.name
-                                                        : "No file selected"}
-                                                </span>
-                                                <Button type="button" className="rounded-l-none border-l" variant="ghost" onClick={() => restartBackground()}>
-                                                    <RotateCcw />
-                                                </Button>
+                                                <div className="flex items-center gap-0">
+                                                    <Button
+                                                        className="bg-violet-500 hover:bg-violet-700 text-white rounded-r-none p-1" 
+                                                        type="button" asChild size="sm"
+                                                        >
+                                                        <label htmlFor="background-img">
+                                                            Select image
+                                                        </label>
+                                                    </Button>
+                                                    <span className="text-neutral-400 text-sm truncate pl-2 pr-2 h-10 text-center flex-1 flex items-center">
+                                                        {data.background_img instanceof File
+                                                            ? data.background_img.name
+                                                            : "No file selected"}
+                                                    </span>
+                                                    <Button type="button" className="rounded-l-none border-l" variant="ghost" onClick={() => restartBackground()}>
+                                                        <RotateCcw />
+                                                    </Button>
+                                                </div>
                                                 <Input
                                                     id="background-img"
                                                     className="hidden"
@@ -422,6 +437,7 @@ export default function AddGameModal({
 
                     <DialogFooter className="border-t p-6">
                         <Button
+                            className="hover:bg-neutral-700 text-white bg-neutral-500"
                             type="button"
                             variant="outline"
                             onClick={() => {
@@ -434,6 +450,7 @@ export default function AddGameModal({
                         </Button>
 
                         <Button
+                            className="hover:bg-violet-700 text-white bg-violet-500"
                             type="submit"
                             disabled={processing}
                         >
