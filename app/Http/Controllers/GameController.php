@@ -4,21 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\GameGenre;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class GameController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = $request->perPage ?? 10;
+
+        $games = Game::where('user_id', auth()->user()->id)
+        ->search($request->search)
+        ->with('genres')
+        ->orderBy('title', 'asc')
+        ->paginate($perPage)
+        ->withQueryString();
+
         return inertia('games/index', [
-            'games' => Game::where('user_id', auth()->user()->id)->with('genres')->get(),
+            'games' => $games,
             'gameGenres' => GameGenre::all(),
+            'filters' => [
+                'search' => $request->search,
+                'perPage' => $perPage,    
+            ],
         ]);
     }
 

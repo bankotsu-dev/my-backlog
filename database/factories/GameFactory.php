@@ -18,7 +18,13 @@ class GameFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_id' => 1,
+            'title' => $this->faker->sentence(),
+            'status' => $this->faker->randomElement(['Backlog', 'Playing', 'Completed', 'Paused', 'Dropped']),
+            'description' => $this->faker->text(),
+            'rating' => $this->faker->numberBetween(1, 5),
+            'hg' => $this->faker->randomElement([true, false]),
+            'developer' => $this->faker->company(),
         ];
     }
 }

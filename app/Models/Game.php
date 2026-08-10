@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 
 class Game extends Model
 {
@@ -67,6 +68,13 @@ class Game extends Model
                 return $this->getRawOriginal('background_image');
             }
         );
+    }
+
+    public function scopeSearch(Builder $query, $value): void
+    {
+        if( $value) {
+            $query->where('title', 'like', "%{$value}%");
+        }
     }
 
 }

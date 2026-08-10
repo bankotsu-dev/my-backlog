@@ -47,14 +47,14 @@ export default function GameCard({ game }: Props) {
                         <img
                             src={game.cover}
                             alt={game.title}
-                            className="aspect-[2/3] h-full w-full object-fill"
+                            className="h-full aspect-[2/3] w-full object-fill"
                         />
                     ) : (
                         <Gamepad2 className="h-20 w-20 text-muted-foreground" />
                     )}
                 </div>
 
-                <div className="flex flex-1 flex-col p-5">
+                <div className="flex flex-1 flex-col p-4">
                     <div className="flex items-start justify-between">
                         <div>
                             <h2 className="text-2xl font-bold">
@@ -101,10 +101,6 @@ export default function GameCard({ game }: Props) {
                                     <Trash2 className="h-4 w-4" />
                                 </Button>
                             </div>
-
-                            <Badge className="bg-purple-500 text-white hover:bg-purple-600">
-                                {game.status}
-                            </Badge>
                         </div>
                     </div>
 
@@ -138,7 +134,9 @@ export default function GameCard({ game }: Props) {
                         </div>
 
                         <div className="text-sm text-muted-foreground">
-                            {game.publisher}
+                            <Badge className="bg-violet-700 text-white hover:bg-violet-700">
+                                {game.status}
+                            </Badge>
                         </div>
                     </div>
                 </div>

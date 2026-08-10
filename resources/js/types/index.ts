@@ -38,3 +38,15 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface PageLinkItem {
+    active: boolean;
+    label: string;
+    url: string;
+}
+
+export interface Filters {
+    search: string;
+    perPage: number;
+    status: string;
+}
