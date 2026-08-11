@@ -24,6 +24,7 @@ interface Image {
 interface Game {
     id: number;
     title: string;
+    original_title: string;
     status: string;
     description: string | null;
     notes: string | null;
@@ -104,6 +105,9 @@ export default function GameShow({
                             <h1 className="text-5xl font-bold text-violet-700 [text-shadow:0_0_4px_white,0_0_6px_white]">
                                 {game.title}
                             </h1>
+                            <h2 className="mt-2 text-3xl font-bold text-violet-700 [text-shadow:0_0_2px_white,0_0_4px_white]">
+                                {game.original_title}
+                            </h2>
                             
                             <div className="mt-5 flex flex-wrap gap-2">
                                 {game.genres.map((genre) => (

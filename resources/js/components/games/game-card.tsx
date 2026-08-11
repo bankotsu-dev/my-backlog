@@ -12,6 +12,7 @@ interface GameGenre {
 interface Game {
     id: number;
     title: string;
+    original_title: string;
     status: string;
     description: string | null;
     notes: string | null;
@@ -62,7 +63,7 @@ export default function GameCard({ game }: Props) {
                             </h2>
 
                             <p className="text-muted-foreground">
-                                {game.developer}
+                                {game.original_title}
                             </p>
                         </div>
 

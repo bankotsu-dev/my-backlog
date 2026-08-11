@@ -33,6 +33,7 @@ interface GameGenre {
 interface Game {
     id: number;
     title: string;
+    original_title: string;
     status: string;
     description: string | null;
     notes: string | null;
@@ -56,6 +57,7 @@ export default function Edit( { game, gameGenres } : Props) {
     const { data, setData, post, processing, errors, transform } = useForm({
         _method: "PUT",
         title: game.title,
+        original_title: game.original_title,
         status: game.status,
         description: game.description ?? '',
         genres: game.genres.map((genre) => genre.id),
@@ -230,6 +232,22 @@ export default function Edit( { game, gameGenres } : Props) {
                                 {errors.title && (
                                     <p className="mt-1 text-sm text-destructive">
                                         {errors.title}
+                                    </p>
+                                )}
+                            </div>
+                            
+                            <div className="col-span-2">
+                                <Label className="bg-white p-2 rounded-md dark:bg-black">Original Title</Label>
+                                <Input
+                                    className="mt-3"
+                                    required
+                                    value={data.original_title}
+                                    onChange={(e) => setData("original_title", e.target.value)}
+                                />
+
+                                {errors.original_title && (
+                                    <p className="mt-1 text-sm text-destructive">
+                                        {errors.original_title}
                                     </p>
                                 )}
                             </div>

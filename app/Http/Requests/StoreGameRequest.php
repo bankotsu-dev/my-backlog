@@ -25,6 +25,7 @@ class StoreGameRequest extends FormRequest
         return [
             'user_id' => 'required|exists:users,id',
             'title' => 'required|max:255',
+            'original_title' => 'nullable|max:255',
             'status' => 'required|in:Backlog,Playing,Completed,Paused,Dropped',
             'description' => 'nullable|max:64000',
             'notes' => 'nullable|max:64000',

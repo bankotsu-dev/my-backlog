@@ -20,6 +20,7 @@ class GameFactory extends Factory
         return [
             'user_id' => 1,
             'title' => $this->faker->sentence(),
+            'original_title' => $this->faker->sentence(),
             'status' => $this->faker->randomElement(['Backlog', 'Playing', 'Completed', 'Paused', 'Dropped']),
             'description' => $this->faker->text(),
             'rating' => $this->faker->numberBetween(1, 5),

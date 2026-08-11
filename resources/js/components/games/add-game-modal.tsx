@@ -30,6 +30,7 @@ interface GameForm {
     [key: string]: string | number | boolean | File | null | number[];
     user_id: number;
     title: string;
+    original_title: string;
     status: string;
     description: string;
     genres: number[];
@@ -62,6 +63,7 @@ export default function AddGameModal({
     } = useForm<GameForm>({
         user_id: auth.user.id,
         title: "",
+        original_title: "",
         status: "Backlog",
         description: "",
         genres: [] as number[],
@@ -226,6 +228,20 @@ export default function AddGameModal({
                                         {errors.title && (
                                             <p className="mt-1 text-sm text-destructive">
                                                 {errors.title}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <div className="col-span-2">
+                                        <Label>Original Title</Label>
+                                        <Input
+                                            value={data.original_title}
+                                            onChange={(e) => setData("original_title", e.target.value)}
+                                        />
+
+                                        {errors.original_title && (
+                                            <p className="mt-1 text-sm text-destructive">
+                                                {errors.original_title}
                                             </p>
                                         )}
                                     </div>
