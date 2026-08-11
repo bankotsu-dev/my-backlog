@@ -76,5 +76,12 @@ class Game extends Model
             $query->where('title', 'like', "%{$value}%");
         }
     }
+    
+    public function scopeStatus(Builder $query, $value): void
+    {
+        if( $value) {
+            $query->where('status', $value);
+        }
+    }
 
 }

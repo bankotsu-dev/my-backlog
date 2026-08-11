@@ -22,6 +22,7 @@ class GameController extends Controller
 
         $games = Game::where('user_id', auth()->user()->id)
         ->search($request->search)
+        ->status($request->status)
         ->with('genres')
         ->orderBy('title', 'asc')
         ->paginate($perPage)
@@ -33,6 +34,7 @@ class GameController extends Controller
             'filters' => [
                 'search' => $request->search,
                 'perPage' => $perPage,    
+                'status' => $request->status,    
             ],
         ]);
     }

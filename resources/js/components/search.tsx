@@ -1,6 +1,4 @@
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
 import { router } from '@inertiajs/react';
 import React from 'react';
 import { Filters } from '@/types';
@@ -27,8 +25,8 @@ export default function Search({search, setSearch, filters, routeName}: searchPr
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         // console.log(e.target.value)
-        const userInput = e.target.value
-        setSearch(userInput)
+        const userInput = e.target.value;
+        setSearch(userInput);
 
         // Clear previous timeput if exists
         if (timeoutId) {
@@ -60,7 +58,7 @@ export default function Search({search, setSearch, filters, routeName}: searchPr
     } */
 
     return (
-        <div className='flex items-center w-full max-w-md space-x-2'>
+        <div className='flex items-center w-full max-w-xl space-x-2'>
             <div className='flex-1'>
                 <Input
                     type='text'
