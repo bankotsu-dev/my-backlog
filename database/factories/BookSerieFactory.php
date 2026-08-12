@@ -18,7 +18,11 @@ class BookSerieFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_id' => 1,
+            'title' => $this->faker->sentence(),
+            'original_title' => $this->faker->sentence(),
+            'author' => $this->faker->name(),
+            'status' => $this->faker->randomElement(['Backlog', 'Reading', 'Completed', 'Paused', 'Dropped']),
         ];
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\BookSerie;
+use App\Models\BookGenre;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreBookSerieRequest;
 use App\Http\Requests\UpdateBookSerieRequest;
 
@@ -11,9 +13,25 @@ class BookSerieController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $perPage = $request->perPage ?? 10;
+        $series = BookSerie::where('user_id', auth()->user()->id)
+        ->search($request->search)
+        ->status($request->status)
+        ->orderBy('title', 'asc')
+        ->paginate($perPage)
+        ->withQueryString();
+
+        return inertia('books/index', [
+            'series' => $series,
+            'bookGenres' => BookGenre::all(),
+            'filters' => [
+                'search' => $request->search,
+                'perPage' => $perPage,    
+                'status' => $request->status,    
+            ],
+        ]);
     }
 
     /**

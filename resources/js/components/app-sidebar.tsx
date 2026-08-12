@@ -10,22 +10,22 @@ import AppLogo from './app-logo';
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        url: '/dashboard',
+        url: route('dashboard'),
         icon: LayoutGrid,
     },
     {
         title: 'Games',
-        url: '/games',
+        url: route('games.index'),
         icon: Gamepad2,
     },
     {
         title: 'Anime',
-        url: '/dashboard',
+        url: route('dashboard'),
         icon: MonitorPause,
     },
     {
         title: 'Books',
-        url: '/dashboard',
+        url: route('books.index'),
         icon: BookText,
     },
 ];
