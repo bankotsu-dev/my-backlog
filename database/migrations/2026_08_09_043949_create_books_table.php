@@ -17,13 +17,15 @@ return new class extends Migration
             $table->foreign('serie_id')->references('id')->on('book_series')->onDelete('cascade');
             $table->string('title');
             $table->string('original_title')->nullable();
-            $table->text('status');
+            $table->string('status');
             $table->integer('last_page')->nullable();
-            $table->enum('type', ['main', 'precuel', 'sequel', 'spin-off'])->default('main');
+            $table->enum('type', ['main', 'prequel', 'sequel', 'spin-off'])->default('main');
             $table->integer('order')->default(1);
-            $table->text('cover_type')->nullable();
-            $table->text('cover_url')->nullable();
-            $table->text('cover_path')->nullable();
+            $table->string('cover_type')->nullable();
+            $table->string('cover_url')->nullable();
+            $table->string('cover_path')->nullable();
+            $table->unsignedTinyInteger('rating')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

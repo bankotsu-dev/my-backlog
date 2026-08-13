@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('background_public_id')->nullable();
             $table->string('developer')->nullable();
             $table->string('publisher')->nullable();
-            $table->integer('rating')->nullable();
+            $table->unsignedTinyInteger('rating')->nullable();
             $table->boolean('hg')->default(false);
             $table->string('version')->nullable();
             $table->timestamps();

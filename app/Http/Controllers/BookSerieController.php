@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BookSerie;
 use App\Models\BookGenre;
+use App\Models\Book;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreBookSerieRequest;
 use App\Http\Requests\UpdateBookSerieRequest;
@@ -64,6 +65,7 @@ class BookSerieController extends Controller
     {
         return inertia('books/show', [
             'serie' => $bookSerie->load('genres'),
+            'books' => Book::where('serie_id', $bookSerie->id)->orderBy('order', 'asc')->get(),
         ]);
     }
 
