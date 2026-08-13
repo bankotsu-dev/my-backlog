@@ -19,7 +19,12 @@ class BookSerie extends Model
         'status',
     ];
 
-     public function scopeSearch(Builder $query, $value): void
+    public function genres()
+    {
+        return $this->belongsToMany(BookGenre::class, 'bookserie_bookgenre', 'serie_id', 'genre_id');
+    }
+
+    public function scopeSearch(Builder $query, $value): void
     {
         if( $value) {
             $query->where('title', 'like', "%{$value}%")

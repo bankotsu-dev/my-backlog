@@ -30,6 +30,8 @@ Route::middleware(['auth'])->group(function () {
 
     //Books
     Route::get('books', [\App\Http\Controllers\BookSerieController::class, 'index'])->name('books.index');
+    Route::get('books/{bookSerie}', [\App\Http\Controllers\BookSerieController::class, 'show'])->name('books.show');
+    Route::post('books', [\App\Http\Controllers\BookSerieController::class, 'store'])->name('books-series.store');
 
 });
 

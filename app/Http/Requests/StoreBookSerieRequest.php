@@ -12,7 +12,7 @@ class StoreBookSerieRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,12 @@ class StoreBookSerieRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => ['required', 'exists:users,id'],
+            'title' => ['required', 'max:255'],
+            'original_title' => ['nullable', 'max:255'],
+            'author' => ['nullable', 'max:255'],
+            'status' => ['required', 'in:Backlog,Reading,Completed,Paused,Dropped'],
+            'genres' => ['nullable', 'array', 'exists:book_genres,id'],
         ];
     }
 }

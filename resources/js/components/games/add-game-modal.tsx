@@ -453,7 +453,7 @@ export default function AddGameModal({
 
                     <DialogFooter className="border-t p-6">
                         <Button
-                            className="hover:bg-neutral-700 text-white bg-neutral-500"
+                            className="hover:bg-neutral-700 text-white bg-neutral-500 hover:text-white"
                             type="button"
                             variant="outline"
                             onClick={() => {

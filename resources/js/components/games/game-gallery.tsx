@@ -37,7 +37,7 @@ export default function GameGallery({ images, gameId }: { images: Image[], gameI
                 <Button
                     variant="ghost"
                     title="View details"
-                    className="text-white hover:bg-violet-700 w-8 h-8"
+                    className="text-white hover:bg-violet-700 w-8 h-8  hover:text-white"
                     onClick={() => setOpen(true)}
                     >
                     <Plus className="!h-6 !w-6 stroke-3" />

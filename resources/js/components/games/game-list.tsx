@@ -8,6 +8,7 @@ interface GameGenre {
 interface Game {
     id: number;
     title: string;
+    original_title: string;
     status: string;
     description: string | null;
     notes: string | null;

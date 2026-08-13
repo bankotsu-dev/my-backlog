@@ -19,6 +19,7 @@ class BookSerieController extends Controller
         $series = BookSerie::where('user_id', auth()->user()->id)
         ->search($request->search)
         ->status($request->status)
+        ->with('genres')
         ->orderBy('title', 'asc')
         ->paginate($perPage)
         ->withQueryString();
@@ -47,7 +48,13 @@ class BookSerieController extends Controller
      */
     public function store(StoreBookSerieRequest $request)
     {
-        //
+        try {
+            $serie = BookSerie::create($request->validated());
+            $serie->genres()->sync($request->genres);
+            return back();
+        } catch (\Throwable $th) {
+            return back()->withErrors(['error' => $e->getMessage(),]);
+        }
     }
 
     /**

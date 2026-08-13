@@ -181,7 +181,7 @@ class GameController extends Controller
                     'background_public_id' => $path,
                 ]);
             }
-            return redirect()->route('games.index')->with('success', 'Game updated successfully.');
+            return redirect()->route('games.show', $game->id);
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage(),]);
         }

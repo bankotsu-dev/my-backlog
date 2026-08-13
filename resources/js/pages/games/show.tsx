@@ -113,7 +113,7 @@ export default function GameShow({
                                 {game.genres.map((genre) => (
                                     <Badge
                                         key={genre.id}
-                                        className="text-white dark:bg-black"
+                                        className="bg-violet-500 text-white hover:bg-violet-500"
                                     >
                                         {genre.genre}
                                     </Badge>
@@ -184,7 +184,7 @@ export default function GameShow({
                                         {game.genres.map((genre) => (
                                             <Badge
                                                 key={genre.id}
-                                                className="bg-black text-violet-400 hover:bg-black"
+                                                className="bg-violet-500 text-white hover:bg-violet-500"
                                             >
                                                 {genre.genre}
                                             </Badge>
