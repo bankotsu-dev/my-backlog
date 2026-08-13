@@ -62,7 +62,9 @@ class BookSerieController extends Controller
      */
     public function show(BookSerie $bookSerie)
     {
-        //
+        return inertia('books/show', [
+            'serie' => $bookSerie->load('genres'),
+        ]);
     }
 
     /**

@@ -145,5 +145,4 @@ export default function Index({series, bookGenres, filters}: Props) {
             </section>
         </AppLayout>
     )
-    
 }
