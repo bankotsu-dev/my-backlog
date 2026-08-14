@@ -6,36 +6,30 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
-import { usePage } from "@inertiajs/react";
-import type { Auth } from "@/types";
-import MultiSelect from "@/components/games/multi-select";
 
-interface BookGenre {
-    id: number;
-    genre: string;
-}
 interface Props {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    gameGenres: BookGenre[];
+    serieId: number;
 }
 
-interface SerieForm {
-    [key: string]: string | number | null | number[];
-    user_id: number;
+interface BookForm {
+    [key: string]: string | number | null | File;
+    serie_id: number;
     title: string;
     original_title: string;
-    author: string;
     status: string;
-    genres: number[];
+    last_page: number;
+    type: string;
+    order: number;
+    img_type: string;
+    url: string;
+    image: File | null;
+    rating: number;
+    notes: string;
 }
 
-export default function AddSerieModal({
-    open,
-    onOpenChange,
-    gameGenres,
-}: Props) {
-    const { auth } = usePage<{ auth: Auth }>().props;
+export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
 
     const {
         data,
@@ -44,13 +38,19 @@ export default function AddSerieModal({
         processing,
         errors,
         reset,
-    } = useForm<SerieForm>({
-        user_id: auth.user.id,
+    } = useForm<BookForm>({
+        serie_id: serieId,
         title: "",
         original_title: "",
         status: "Backlog",
-        author: "",
-        genres: [] as number[],
+        last_page: 0,
+        type: "main",
+        order: 1,
+        img_type: "url",
+        url: "",
+        image: null as File | null,
+        rating: 0,
+        notes: "",
     });
 
     function handleSubmit(e:React.FormEvent<HTMLFormElement>) {
@@ -77,10 +77,10 @@ export default function AddSerieModal({
             open={open}
             onOpenChange={onOpenChange}
         >
-            <DialogContent className="max-w-5xl p-0 flex flex-col" onInteractOutside={(e) => e.preventDefault()}>
+            <DialogContent className="max-w-6xl p-0 flex flex-col" onInteractOutside={(e) => e.preventDefault()}>
                 <DialogHeader className="border-b p-6">
                     <DialogTitle>
-                        Add a new serie
+                        Add a new book
                     </DialogTitle>
 
                     <DialogDescription>
@@ -123,20 +123,6 @@ export default function AddSerieModal({
                                     </div>
 
                                     <div className="col-span-1">
-                                        <Label>Author</Label>
-                                        <Input
-                                            value={data.author}
-                                            onChange={(e) => setData("author", e.target.value)}
-                                        />
-
-                                        {errors.author && (
-                                            <p className="mt-1 text-sm text-destructive">
-                                                {errors.author}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div className="col-span-1">
                                         <Label>Status</Label>
                                         <Select
                                             value={data.status}
@@ -165,17 +151,6 @@ export default function AddSerieModal({
                                             </SelectContent>
                                         </Select>
                                     </div>
-
-                                    <div className="col-span-2">
-                                        <Label>Genres</Label>
-                                        <MultiSelect
-                                            options={gameGenres}
-                                            value={data.genres}
-                                            onChange={(value) => setData("genres", value)}
-                                            getValue={(genre) => genre.id}
-                                            getLabel={(genre) => genre.genre}
-                                        />
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -202,7 +177,7 @@ export default function AddSerieModal({
                         >
                             {processing
                                 ? "Saving..."
-                                : "Add Serie"}
+                                : "Add Book"}
                         </Button>
 
                     </DialogFooter>

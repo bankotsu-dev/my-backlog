@@ -64,8 +64,9 @@ class BookSerieController extends Controller
     public function show(BookSerie $bookSerie)
     {
         return inertia('books/show', [
-            'serie' => $bookSerie->load('genres'),
-            'books' => Book::where('serie_id', $bookSerie->id)->orderBy('order', 'asc')->get(),
+            'serie' => $bookSerie->load('genres')->load([
+                'books' => fn ($query) => $query->orderBy('order', 'asc'),
+            ]),
         ]);
     }
 

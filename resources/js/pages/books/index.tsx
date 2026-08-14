@@ -81,9 +81,11 @@ export default function Index({series, bookGenres, filters}: Props) {
                         />
                     </div>
                     <div className="flex items-center justify-between">
-                        <Button onClick={() => setOpen(true)} 
+                        <Button
+                            type="button" 
+                            onClick={() => setOpen(true)} 
                             className="dark:bg-violet-500 dark:hover:bg-violet-700 dark:focus:ring-violet-500 dark:text-white"
-                            >
+                        >
                             Add Serie
                         </Button>
                     </div>
