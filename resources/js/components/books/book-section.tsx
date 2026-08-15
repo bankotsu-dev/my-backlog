@@ -34,7 +34,7 @@ export default function BookSection({
                         {title}
                     </h2>
 
-                    <div className="mt-2 h-1 w-12 rounded-full bg-violet-500" />
+                    <div className="mt-2 h-1 w-full rounded-full bg-violet-500" />
                 </div>
 
                 <span className="text-sm text-muted-foreground">

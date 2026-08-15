@@ -21,5 +21,7 @@ class Book extends Model
         'cover_type',
         'cover_url',
         'cover_path',
+        'rating',
+        'notes',
     ];
 }

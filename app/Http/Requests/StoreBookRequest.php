@@ -12,7 +12,7 @@ class StoreBookRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,18 @@ class StoreBookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'serie_id' => ['required', 'exists:book_series,id'],
+            'title' => ['required', 'max:255'],
+            'original_title' => ['nullable', 'max:255'],
+            'status' => ['required', 'in:Backlog,Reading,Completed,Paused,Dropped'],
+            'last_page' => ['nullable', 'integer', 'min:0'],
+            'type' => ['required', 'in:main,prequel,sequel,spin-off'],
+            'order' => ['required', 'integer', 'min:1'],
+            'img_type' => ['nullable', 'in:url,upload'],
+            'url' => ['nullable', 'url', 'max:255'],
+            'image' => ['nullable', 'image', 'max:1024'],
+            'rating' => ['nullable', 'integer', 'min:0', 'max:5'],
+            'notes' => ['nullable', 'max:64000'],
         ];
     }
 }

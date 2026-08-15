@@ -31,7 +31,10 @@ Route::middleware(['auth'])->group(function () {
     //Books
     Route::get('books', [\App\Http\Controllers\BookSerieController::class, 'index'])->name('books.index');
     Route::get('books/{bookSerie}', [\App\Http\Controllers\BookSerieController::class, 'show'])->name('books.show');
-    Route::post('books', [\App\Http\Controllers\BookSerieController::class, 'store'])->name('books-series.store');
+    Route::post('books/serie', [\App\Http\Controllers\BookSerieController::class, 'store'])->name('books-series.store');
+    Route::post('books', [\App\Http\Controllers\BookController::class, 'store'])->name('books.store');
+    Route::put('books/{book}', [\App\Http\Controllers\BookController::class, 'update'])->name('books.update');
+    Route::put('books/serie/{serie}', [\App\Http\Controllers\BookSerieController::class, 'update'])->name('books-series.update');
 
 });
 

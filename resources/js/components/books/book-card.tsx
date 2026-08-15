@@ -1,6 +1,7 @@
-import { Link } from "@inertiajs/react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { BookOpen, Star } from "lucide-react";
+import ShowEditBookModal from "@/components/books/show-edit-book-modal";
 
 interface Book {
     id: number;
@@ -15,15 +16,20 @@ interface Book {
     cover_url: string;
     cover_path: string;
     rating: number;
+    notes: string;
 }
 
 export default function BookCard({ book }: { book: Book }) {
+
+    const [openModal, setOpenModal] = useState(false);
+
     return (
-        <Link
-            href={route('books.show', book.id)}
-            className="group block"
-        >
-            <Card className="overflow-hidden border-0 bg-transparent shadow-none">
+        <div key={book.id}>
+            <ShowEditBookModal open={openModal} onOpenChange={setOpenModal} book={book} />
+            <Card
+                onClick={() => setOpenModal(true)} 
+                className="overflow-hidden border-0 bg-transparent shadow-none group hover:cursor-pointer"
+            >
                 <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-muted">
                     {book.cover_url ? (
                         <img
@@ -40,6 +46,9 @@ export default function BookCard({ book }: { book: Book }) {
                     {/* Order */}
                     <div className="absolute left-2 top-2 rounded-md bg-black/70 px-2 py-1 text-xs font-semibold text-white">
                         {String(book.order).padStart(2, '0')}
+                    </div>
+                    <div className="absolute right-2 bottom-2 rounded-md bg-black/70 px-2 py-1 text-xs font-semibold text-white">
+                        {book.status}
                     </div>
                 </div>
 
@@ -75,6 +84,6 @@ export default function BookCard({ book }: { book: Book }) {
                     )}
                 </div>
             </Card>
-        </Link>
+        </div>
     );
 }

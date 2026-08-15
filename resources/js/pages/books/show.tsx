@@ -46,7 +46,7 @@ interface Props {
 const sections = [
     {
         type: 'main' as const,
-        title: 'Main Series',
+        title: 'Main Books',
     },
     {
         type: 'prequel' as const,

@@ -63,6 +63,9 @@ class BookSerieController extends Controller
      */
     public function show(BookSerie $bookSerie)
     {
+        if ($bookSerie->user_id !== auth()->user()->id) {
+            return redirect()->route('books.index')->withError('error', 'You do not have permission to view this book serie.');
+        }
         return inertia('books/show', [
             'serie' => $bookSerie->load('genres')->load([
                 'books' => fn ($query) => $query->orderBy('order', 'asc'),
