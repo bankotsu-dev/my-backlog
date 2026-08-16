@@ -8,6 +8,7 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreBookSerieRequest;
 use App\Http\Requests\UpdateBookSerieRequest;
+use Illuminate\Support\Facades\Storage;
 
 class BookSerieController extends Controller
 {
@@ -61,13 +62,13 @@ class BookSerieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(BookSerie $bookSerie)
+    public function show(BookSerie $serie)
     {
-        if ($bookSerie->user_id !== auth()->user()->id) {
+        if ($serie->user_id !== auth()->user()->id) {
             return redirect()->route('books.index')->withError('error', 'You do not have permission to view this book serie.');
         }
         return inertia('books/show', [
-            'serie' => $bookSerie->load('genres')->load([
+            'serie' => $serie->load('genres')->load([
                 'books' => fn ($query) => $query->orderBy('order', 'asc'),
             ]),
         ]);
@@ -92,8 +93,20 @@ class BookSerieController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(BookSerie $bookSerie)
+    public function destroy(BookSerie $serie)
     {
-        //
+        try {
+            $books = Book::where('serie_id', $serie->id)->get();
+            foreach ($books as $book) {
+                if ($book->cover_path) {
+                    Storage::disk('b2')->delete($book->cover_path);
+                }
+                $book->delete();
+            }
+            $serie->delete();
+            return redirect()->route('books.index');
+        } catch (\Throwable $e) {
+            return back()->withErrors(['error' => $e->getMessage(),]);
+        }
     }
 }
