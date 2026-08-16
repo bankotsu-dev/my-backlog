@@ -223,8 +223,9 @@ export default function Edit( { game, gameGenres } : Props) {
                             <div className="col-span-2">
                                 <Label className="bg-white p-2 rounded-md dark:bg-black">Title</Label>
                                 <Input
-                                    className="mt-3"
+                                    autoFocus
                                     required
+                                    className="mt-3"
                                     value={data.title}
                                     onChange={(e) => setData("title", e.target.value)}
                                 />

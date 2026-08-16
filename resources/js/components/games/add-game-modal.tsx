@@ -221,6 +221,7 @@ export default function AddGameModal({
                                     <div className="col-span-2">
                                         <Label>Title</Label>
                                         <Input
+                                            autoFocus
                                             value={data.title}
                                             onChange={(e) => setData("title", e.target.value)}
                                         />
