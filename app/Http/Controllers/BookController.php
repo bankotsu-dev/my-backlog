@@ -118,6 +118,14 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        try {
+            if($book->cover_path) {
+                Storage::disk('b2')->delete($book->cover_path);
+            }
+            $book->delete();
+            return back();
+        } catch (\Throwable $e) {
+            return back()->withErrors(['error' => $e->getMessage(),]);
+        }
     }
 }

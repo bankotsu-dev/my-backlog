@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
@@ -7,6 +7,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Edit, Plus, Star, Trash2 } from 'lucide-react';
 import BookSection from '@/components/books/book-section';
 import AddBookModal from "@/components/books/add-book-modal";
+import EditSerieModal from "@/components/books/edit-serie-modal";
 
 interface BookGenre {
     id: number;
@@ -40,7 +41,7 @@ interface Serie {
 
 interface Props {
     serie: Serie;
-    books: Book[];
+    genres: BookGenre[];
 }
 
 const sections = [
@@ -62,7 +63,7 @@ const sections = [
     },
 ];
 
-export default function Show({serie}: Props) {
+export default function Show({serie, genres}: Props) {
     
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -78,6 +79,7 @@ export default function Show({serie}: Props) {
     const totalBooks = serie.books.length || 0;
     const {processing, delete: destroy} = useForm();
     const [openBookModal, setOpenBookModal] = useState(false);
+    const [openEditSerieModal, setOpenEditSerieModal] = useState(false);
     
     const handleDelete = (id: number, title: string) => {
         if (confirm(`Are you sure you want to delete ${title}?`)) {
@@ -88,6 +90,17 @@ export default function Show({serie}: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={serie.title} />
+            <EditSerieModal 
+                open={openEditSerieModal} 
+                onOpenChange={setOpenEditSerieModal} 
+                bookGenres={genres}
+                serie={serie} 
+            />
+            <AddBookModal
+                open={openBookModal}
+                onOpenChange={setOpenBookModal}
+                serieId={serie.id}
+            />
             <section className="">
                 <div className="mx-auto flex flex-col p-6">
                     <div className="mt-auto flex items-start gap-10">
@@ -130,12 +143,14 @@ export default function Show({serie}: Props) {
                                 </Badge>
                             </div>
                             <div className="mt-8 flex gap-3">
-                                <Link href={route('games.edit', serie.id)}>
-                                    <Button className="hover:bg-violet-700 text-white bg-violet-500">
-                                        <Edit className="mr-2 h-4 w-4" />
-                                        Edit
-                                    </Button>
-                                </Link>
+                                <Button
+                                    type="button" 
+                                    className="hover:bg-violet-700 text-white bg-violet-500"
+                                    onClick={() => setOpenEditSerieModal(true)}
+                                >
+                                    <Edit className="mr-2 h-4 w-4" />
+                                    Edit
+                                </Button>
                                 <Button 
                                     variant="destructive"
                                     onClick={() => handleDelete(serie.id, serie.title)}
@@ -161,11 +176,6 @@ export default function Show({serie}: Props) {
                                 >
                                 <Plus className="!h-6 !w-6 stroke-3" /> Add Book
                             </Button>
-                            <AddBookModal
-                                open={openBookModal}
-                                onOpenChange={setOpenBookModal}
-                                serieId={serie.id}
-                            />
                         </div>
 
                         <div className="space-y-14">

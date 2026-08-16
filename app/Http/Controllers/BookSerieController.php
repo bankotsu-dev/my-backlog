@@ -71,6 +71,7 @@ class BookSerieController extends Controller
             'serie' => $serie->load('genres')->load([
                 'books' => fn ($query) => $query->orderBy('order', 'asc'),
             ]),
+            'genres' => BookGenre::all(),
         ]);
     }
 
@@ -85,9 +86,15 @@ class BookSerieController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBookSerieRequest $request, BookSerie $bookSerie)
+    public function update(UpdateBookSerieRequest $request, BookSerie $serie)
     {
-        //
+        try {
+            $serie->update($request->validated());
+            $serie->genres()->sync($request->genres);
+            return back();
+        } catch (\Throwable $e) {
+            return back()->withErrors(['error' => $e->getMessage(),]);
+        }
     }
 
     /**
