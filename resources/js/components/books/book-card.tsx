@@ -20,7 +20,6 @@ interface Book {
 }
 
 export default function BookCard({ book }: { book: Book }) {
-
     const [openModal, setOpenModal] = useState(false);
 
     return (
@@ -35,7 +34,7 @@ export default function BookCard({ book }: { book: Book }) {
                         <img
                             src={book.cover_url}
                             alt={book.title}
-                            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                            className="h-full w-full object-fill transition duration-300 group-hover:scale-105"
                         />
                     ) : (
                         <div className="flex h-full items-center justify-center">
@@ -64,7 +63,7 @@ export default function BookCard({ book }: { book: Book }) {
                     )}
 
                     {/* Rating */}
-                    {book.rating != null && (
+                    {book.rating != null && book.rating != 0 && (
                         <div className="mt-2 flex items-center gap-1">
                             {Array.from({ length: 5 }).map((_, index) => (
                                 <Star

@@ -31,21 +31,6 @@ interface Props {
     closeEditing: () => void
 }
 
-interface BookForm {
-    [key: string]: string | number | null | File;
-    title: string;
-    original_title: string;
-    status: string;
-    last_page: number;
-    type: string;
-    order: number;
-    img_type: string;
-    url: string;
-    image: File | null;
-    rating: number;
-    notes: string;
-}
-
 export default function ShowEditBookModal({ book, closeEditing }: Props) {
 
     const {
@@ -55,7 +40,8 @@ export default function ShowEditBookModal({ book, closeEditing }: Props) {
             processing,
             errors,
             reset,
-        } = useForm<BookForm>({
+            transform
+        } = useForm({
             _method: "PUT",
             title: book.title,
             original_title: book.original_title || "",
@@ -68,12 +54,21 @@ export default function ShowEditBookModal({ book, closeEditing }: Props) {
             image: null as File | null,
             rating: book.rating || 0,
             notes: book.notes || "",
+            updateCoverUrl: false as boolean,
         });
 
     const coverPreview = data.image ? URL.createObjectURL(data.image) : data.url || null;
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+
+        transform((data) => ({
+            ...data,
+            ...(data.url === book.cover_url && {
+                url: undefined,
+                updateCoverURL: false,
+            }),
+        }));
 
         post(route("books.update", book.id), {
             forceFormData: true,
@@ -93,8 +88,9 @@ export default function ShowEditBookModal({ book, closeEditing }: Props) {
 
     function resetCover() {
         setData("image", null);
-        setData("url", '');
+        setData("url", book.cover_url || '');
         setData("img_type", 'url');
+        setData("updateCoverUrl", false);
     }
 
     return (
@@ -131,6 +127,7 @@ export default function ShowEditBookModal({ book, closeEditing }: Props) {
                                             onChange={(e) => {
                                                 setData("url", e.target.value);
                                                 setData("img_type", 'url');
+                                                setData("updateCoverUrl", true);
                                                 if (e.target.value) {
                                                     setData("image", null);
                                                 }
@@ -152,8 +149,8 @@ export default function ShowEditBookModal({ book, closeEditing }: Props) {
                                             </label>
                                         </Button>
                                         <span className="text-sm text-muted-foreground truncate pl-2 pr-2">
-                                            {data.cover_img instanceof File
-                                                ? data.cover_img.name
+                                            {data.image instanceof File
+                                                ? data.image.name
                                                 : "No file selected"}
                                         </span>
                                         <Button type="button" className="rounded-l-none border-l" variant="ghost" onClick={() => resetCover()}>

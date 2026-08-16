@@ -53,7 +53,7 @@ class BookController extends Controller
                 ]);
             }
             return back();
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             return back()->withErrors(['error' => $e->getMessage(),]);
         }
     }
@@ -79,7 +79,38 @@ class BookController extends Controller
      */
     public function update(UpdateBookRequest $request, Book $book)
     {
-        return back()->with('success', 'Book updated successfully');
+        try {
+            $book->update($request->validated());
+            if($request->updateCoverUrl){
+                if($book->cover_type === 'upload' && $book->cover_path) {
+                    Storage::disk('b2')->delete($book->cover_path);
+                    $book->update([
+                        'cover_path' => null
+                    ]);
+                }
+                $book->update([
+                    'cover_type' => 'url',
+                    'cover_url' => $request->url,
+                ]);
+            }
+            if($request->hasFile('image') && $request->img_type === 'upload') {
+                $uuid = (string) Str::uuid();
+                $extension = $request->file('image')->extension();
+                $path = "books/". auth()->user()->id ."/{$uuid}.{$extension}";
+                Storage::disk('b2')->put(
+                    $path,
+                    file_get_contents($request->file('image')->getRealPath())
+                );
+                $book->update([
+                    'cover_type' => 'upload',
+                    'cover_url' => null,
+                    'cover_path' => $path,
+                ]);
+            }
+            return back()->with('success', 'Book updated successfully');
+        } catch (\Throwable $e) {
+            return back()->withErrors(['error' => $e->getMessage(),]);
+        }
     }
 
     /**

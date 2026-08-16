@@ -41,11 +41,11 @@ export default function BookDetails({
                             <img
                                 src={book.cover_url}
                                 alt={book.title}
-                                className="h-full w-full object-cover"
+                                className="h-full w-full object-fill"
                             />
                         ) : (
                             <div className="flex h-full items-center justify-center">
-                                <BookOpen className="h-16 w-16 text-muted-foreground" />
+                                <BookOpen className="h-20 w-20 text-muted-foreground" />
                             </div>
                         )}
                     </div>
@@ -95,7 +95,6 @@ export default function BookDetails({
                         </div>
                     </div>
 
-                    {/* Rating */}
                     <div>
                         <p className="text-sm text-muted-foreground">
                             Rating
@@ -122,6 +121,16 @@ export default function BookDetails({
                                     : 'Not rated'}
                             </span>
                         </div>
+
+                        <div className="mt-4">
+                            <p className="text-sm text-muted-foreground">
+                                Notes
+                            </p>
+
+                            <p className="mt-1 font-medium">
+                                {book.notes ?? '—'}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -135,7 +144,7 @@ export default function BookDetails({
                     type="button" 
                     onClick={closeModal}
                 >
-                    Cancel
+                    Close
                 </Button>
                 <Button
                     className="text-white bg-violet-500 hover:bg-violet-700"

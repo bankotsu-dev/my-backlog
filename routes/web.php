@@ -28,13 +28,17 @@ Route::middleware(['auth'])->group(function () {
     Route::post('games/images', [\App\Http\Controllers\GameImageController::class, 'store'])->name('game-images.store');
     Route::delete('games/images/{gameImage}', [\App\Http\Controllers\GameImageController::class, 'destroy'])->name('game-images.destroy');
 
-    //Books
+    //Series
     Route::get('books', [\App\Http\Controllers\BookSerieController::class, 'index'])->name('books.index');
-    Route::get('books/{bookSerie}', [\App\Http\Controllers\BookSerieController::class, 'show'])->name('books.show');
     Route::post('books/serie', [\App\Http\Controllers\BookSerieController::class, 'store'])->name('books-series.store');
+    Route::put('books/serie/{serie}', [\App\Http\Controllers\BookSerieController::class, 'update'])->name('books-series.update');
+    Route::delete('books/serie/{serie}', [\App\Http\Controllers\BookSerieController::class, 'destroy'])->name('books-series.destroy');
+
+    //Books
+    Route::get('books/{bookSerie}', [\App\Http\Controllers\BookSerieController::class, 'show'])->name('books.show');
     Route::post('books', [\App\Http\Controllers\BookController::class, 'store'])->name('books.store');
     Route::put('books/{book}', [\App\Http\Controllers\BookController::class, 'update'])->name('books.update');
-    Route::put('books/serie/{serie}', [\App\Http\Controllers\BookSerieController::class, 'update'])->name('books-series.update');
+    Route::delete('books/{book}', [\App\Http\Controllers\BookController::class, 'destroy'])->name('books.destroy');
 
 });
 

@@ -79,9 +79,9 @@ export default function Show({serie}: Props) {
     const {processing, delete: destroy} = useForm();
     const [openBookModal, setOpenBookModal] = useState(false);
     
-    const handleDelete = (id: number) => {
-        if (confirm('Are you sure you want to delete this game?')) {
-            destroy(route('games.destroy', id));
+    const handleDelete = (id: number, title: string) => {
+        if (confirm(`Are you sure you want to delete ${title}?`)) {
+            destroy(route('books-series.destroy', id));
         }
     };
 
@@ -138,7 +138,7 @@ export default function Show({serie}: Props) {
                                 </Link>
                                 <Button 
                                     variant="destructive"
-                                    onClick={() => handleDelete(serie.id)}
+                                    onClick={() => handleDelete(serie.id, serie.title)}
                                     disabled={processing}
                                 >
                                     <Trash2 className="mr-2 h-4 w-4" />

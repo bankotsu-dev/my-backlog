@@ -65,7 +65,7 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
             preserveScroll: true,
 
             onSuccess: () => {
-                toast.success("The serie has been saved.", { position: "top-right" });
+                toast.success("The book has been saved.", { position: "top-right" });
                 reset();
                 onOpenChange(false);
             },

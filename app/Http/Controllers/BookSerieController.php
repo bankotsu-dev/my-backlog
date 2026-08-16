@@ -53,7 +53,7 @@ class BookSerieController extends Controller
             $serie = BookSerie::create($request->validated());
             $serie->genres()->sync($request->genres);
             return back();
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             return back()->withErrors(['error' => $e->getMessage(),]);
         }
     }
