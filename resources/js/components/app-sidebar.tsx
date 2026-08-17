@@ -14,19 +14,19 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Games',
-        url: route('games.index'),
-        icon: Gamepad2,
-    },
-    {
-        title: 'Anime',
-        url: route('dashboard'),
+        title: 'Animes',
+        url: route('animes.index'),
         icon: MonitorPause,
     },
     {
         title: 'Books',
         url: route('books.index'),
         icon: BookText,
+    },
+    {
+        title: 'Games',
+        url: route('games.index'),
+        icon: Gamepad2,
     },
 ];
 
