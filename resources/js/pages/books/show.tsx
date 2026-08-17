@@ -82,7 +82,7 @@ export default function Show({serie, genres}: Props) {
     const [openEditSerieModal, setOpenEditSerieModal] = useState(false);
     
     const handleDelete = (id: number, title: string) => {
-        if (confirm(`Are you sure you want to delete ${title}?`)) {
+        if (confirm(`Are you sure you want to delete "${title}"?`)) {
             destroy(route('books-series.destroy', id));
         }
     };

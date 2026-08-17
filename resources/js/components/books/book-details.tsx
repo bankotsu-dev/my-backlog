@@ -1,3 +1,4 @@
+import { useForm } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { BookOpen, Star } from 'lucide-react';
@@ -24,11 +25,16 @@ interface Props {
     closeModal: () => void;
 }
 
-export default function BookDetails({
-    book,
-    onEdit,
-    closeModal,
-}: Props) {
+export default function BookDetails({book,onEdit,closeModal}: Props) {
+
+    const {processing, delete: destroy} = useForm();
+
+    const handleDelete = (id: number, title: string) => {
+        if (confirm(`Are you sure you want to delete "${title}"?`)) {
+            destroy(route('books.destroy', id));
+        }
+    };
+
     return (
         <div className="space-y-6">
 
@@ -138,21 +144,31 @@ export default function BookDetails({
             <Separator />
 
             {/* Footer */}
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-between">
                 <Button
-                    className="hover:bg-neutral-700 text-white bg-neutral-500 hover:text-white"
+                    variant="destructive"
                     type="button" 
-                    onClick={closeModal}
+                    onClick={() => handleDelete(book.id, book.title)}
+                    disabled={processing}
                 >
-                    Close
+                    Delete
                 </Button>
-                <Button
-                    className="text-white bg-violet-500 hover:bg-violet-700"
-                    type="button" 
-                    onClick={onEdit}
-                >
-                    Edit Book
-                </Button>
+                <div className="flex gap-2">
+                    <Button
+                        className="hover:bg-neutral-700 text-white bg-neutral-500 hover:text-white"
+                        type="button" 
+                        onClick={closeModal}
+                    >
+                        Close
+                    </Button>
+                    <Button
+                        className="text-white bg-violet-500 hover:bg-violet-700"
+                        type="button" 
+                        onClick={onEdit}
+                    >
+                        Edit Book
+                    </Button>
+                </div>
             </div>
         </div>
     );
