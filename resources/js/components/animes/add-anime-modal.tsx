@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import MultiSelect from "@/components/games/multi-select";
 import { MonitorPause, RotateCcw } from "lucide-react";
@@ -215,6 +214,17 @@ export default function AddAnimeModal({open,onOpenChange,genres}: Props) {
                                         )}
                                     </div>
 
+                                    <div className="col-span-2">
+                                        <Label>Genres</Label>
+                                        <MultiSelect
+                                            options={genres}
+                                            value={data.genres}
+                                            onChange={(value) => setData("genres", value)}
+                                            getValue={(genre) => genre.id}
+                                            getLabel={(genre) => genre.genre}
+                                        />
+                                    </div>
+
                                     <div>
                                         <Label>Status</Label>
                                         <Select
@@ -229,7 +239,7 @@ export default function AddAnimeModal({open,onOpenChange,genres}: Props) {
                                                 <SelectItem value="Backlog">
                                                     Backlog
                                                 </SelectItem>
-                                                <SelectItem value="Playing">
+                                                <SelectItem value="Watching">
                                                     Watching
                                                 </SelectItem>
                                                 <SelectItem value="Completed">
@@ -245,24 +255,7 @@ export default function AddAnimeModal({open,onOpenChange,genres}: Props) {
                                         </Select>
                                     </div>
 
-                                    <div className="col-span-2">
-                                        <Label>Genres</Label>
-                                        <MultiSelect
-                                            options={genres}
-                                            value={data.genres}
-                                            onChange={(value) => setData("genres", value)}
-                                            getValue={(genre) => genre.id}
-                                            getLabel={(genre) => genre.genre}
-                                        />
-                                    </div>
-                                </div>
-
-                                <Separator />
-                                <div className="space-y-6 grid grid-cols-12 gap-4 items-end">
-
-                                    {/* Rating */}
-
-                                    <div className="col-span-6">
+                                    <div className="">
                                         <Label>Rating ({data.rating}/5)</Label>
                                         <Slider
                                             className="mt-4"
@@ -279,7 +272,9 @@ export default function AddAnimeModal({open,onOpenChange,genres}: Props) {
                                             </p>
                                         )}
                                     </div>
+                                </div>
 
+                                <div className="space-y-6 grid grid-cols-12 gap-4 items-end">
                                     {/* Description */}
                                     <div className="col-span-12">
                                         <Label>Description</Label>

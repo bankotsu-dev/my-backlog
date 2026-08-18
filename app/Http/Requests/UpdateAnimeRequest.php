@@ -12,7 +12,7 @@ class UpdateAnimeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,16 @@ class UpdateAnimeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'max:255'],
+            'original_title' => ['nullable', 'max:255'],
+            'status' => ['required', 'in:Backlog,Watching,Completed,Paused,Dropped'],
+            'description' => ['nullable', 'max:64000'],
+            'img_type' => ['nullable', 'in:url,upload'],
+            'url' => ['nullable', 'url', 'max:255'],
+            'image' => ['nullable', 'image', 'max:1024'],
+            'rating' => ['nullable', 'integer', 'min:0', 'max:5'],
+            'genres' => ['nullable', 'array', 'exists:anime_genres,id'],
+            'updateCoverUrl' => ['nullable', 'boolean'],
         ];
     }
 }

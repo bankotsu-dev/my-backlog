@@ -103,7 +103,39 @@ class AnimeController extends Controller
      */
     public function update(UpdateAnimeRequest $request, Anime $anime)
     {
-        //
+         try {
+            $anime->update($request->validated());
+            $anime->genres()->sync($request->genres);
+            if($request->updateCoverUrl){
+                if($anime->cover_type === 'upload' && $anime->cover_path) {
+                    Storage::disk('b2')->delete($anime->cover_path);
+                    $anime->update([
+                        'cover_path' => null
+                    ]);
+                }
+                $anime->update([
+                    'cover_type' => 'url',
+                    'cover_url' => $request->url,
+                ]);
+            }
+            if($request->hasFile('image') && $request->img_type === 'upload') {
+                $uuid = (string) Str::uuid();
+                $extension = $request->file('image')->extension();
+                $path = "animes/". auth()->user()->id ."/{$uuid}.{$extension}";
+                Storage::disk('b2')->put(
+                    $path,
+                    file_get_contents($request->file('image')->getRealPath())
+                );
+                $anime->update([
+                    'cover_type' => 'upload',
+                    'cover_url' => null,
+                    'cover_path' => $path,
+                ]);
+            }
+            return back()->with('success', 'Anime updated successfully');
+        } catch (\Throwable $e) {
+            return back()->withErrors(['error' => $e->getMessage(),]);
+        }
     }
 
     /**
