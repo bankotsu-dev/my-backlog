@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anime;
+use App\Models\AnimeGenre;
+use App\Models\Season;
 use App\Http\Requests\StoreAnimeRequest;
 use App\Http\Requests\UpdateAnimeRequest;
 use Illuminate\Http\Request;
-use App\Models\AnimeGenre;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -143,6 +144,18 @@ class AnimeController extends Controller
      */
     public function destroy(Anime $anime)
     {
-        //
+        try {
+            $seasons = Season::where('anime_id', $anime->id)->get();
+            foreach ($seasons as $season) {
+                if ($season->cover_path) {
+                    Storage::disk('b2')->delete($season->cover_path);
+                }
+                $season->delete();
+            }
+            $anime->delete();
+            return redirect()->route('animes.index');
+        } catch (\Throwable $e) {
+            return back()->withErrors(['error' => $e->getMessage(),]);
+        }
     }
 }

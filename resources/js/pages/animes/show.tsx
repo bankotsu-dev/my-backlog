@@ -52,7 +52,7 @@ export default function Show({anime, genres}: Props) {
     
     const handleDelete = (id: number, title: string) => {
         if (confirm(`Are you sure you want to delete "${title}"?`)) {
-            destroy(route('seasons.destroy', id));
+            destroy(route('animes.destroy', id));
         }
     };
 
