@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 
 class Anime extends Model
 {
@@ -21,6 +22,11 @@ class Anime extends Model
     public function genres()
     {
         return $this->belongsToMany(AnimeGenre::class, 'anime_animegenre', 'anime_id', 'genre_id');
+    }
+
+    public function seasons()
+    {
+        return $this->hasMany(Season::class);
     }
 
     public function scopeSearch(Builder $query, $value): void

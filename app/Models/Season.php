@@ -15,4 +15,19 @@ class Season extends Model
         'created_at',
         'updated_at',
     ];
+
+    protected function coverUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if($this->cover_path) {
+                   return Storage::disk('b2')->temporaryUrl(
+                        $this->cover_path,
+                        now()->addMinutes(5)
+                    );
+                }
+                return $this->getRawOriginal('cover_url');
+            }
+        );
+    }
 }

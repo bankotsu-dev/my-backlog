@@ -14,26 +14,10 @@ import { Textarea } from "@/components/ui/textarea";
 interface Props {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    serieId: number;
+    animeId: number;
 }
 
-interface BookForm {
-    [key: string]: string | number | null | File;
-    serie_id: number;
-    title: string;
-    original_title: string;
-    status: string;
-    last_page: number;
-    type: string;
-    order: number;
-    img_type: string;
-    url: string;
-    image: File | null;
-    rating: number;
-    notes: string;
-}
-
-export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
+export default function AddSeasonModal({ open, onOpenChange, animeId, }: Props) {
 
     const {
         data,
@@ -42,13 +26,13 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
         processing,
         errors,
         reset,
-    } = useForm<BookForm>({
-        serie_id: serieId,
+    } = useForm({
+        anime_id: animeId,
         title: "",
         original_title: "",
         status: "Backlog",
-        last_page: 0,
-        type: "main",
+        last_watched: 0,
+        type: "season",
         order: 1,
         img_type: "url",
         url: "",
@@ -60,12 +44,12 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
     function handleSubmit(e:React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        post(route("books.store"), {
+        post(route("seasons.store"), {
             forceFormData: true,
             preserveScroll: true,
 
             onSuccess: () => {
-                toast.success("The book has been saved.", { position: "top-right" });
+                toast.success("The season has been saved.", { position: "top-right" });
                 reset();
                 onOpenChange(false);
             },
@@ -92,7 +76,7 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
             <DialogContent className="max-w-6xl p-0 flex flex-col" onInteractOutside={(e) => e.preventDefault()}>
                 <DialogHeader className="border-b p-6">
                     <DialogTitle>
-                        Add a new book
+                        Add a new season
                     </DialogTitle>
 
                     <DialogDescription>
@@ -238,8 +222,8 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
                                                 <SelectItem value="Backlog">
                                                     Backlog
                                                 </SelectItem>
-                                                <SelectItem value="Reading">
-                                                    Reading
+                                                <SelectItem value="Watching">
+                                                    Watching
                                                 </SelectItem>
                                                 <SelectItem value="Completed">
                                                     Completed
@@ -265,17 +249,17 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
                                             </SelectTrigger>
 
                                             <SelectContent>
-                                                <SelectItem value="main">
-                                                    Main
+                                                <SelectItem value="season">
+                                                    Season
                                                 </SelectItem>
-                                                <SelectItem value="prequel">
-                                                    Prequel
+                                                <SelectItem value="movie">
+                                                    Movie
                                                 </SelectItem>
-                                                <SelectItem value="sequel">
-                                                    Sequel
+                                                <SelectItem value="ova">
+                                                    Ova
                                                 </SelectItem>
-                                                <SelectItem value="spin-off">
-                                                    Spin-off
+                                                <SelectItem value="special">
+                                                    Special
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
@@ -299,17 +283,17 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
                                     </div>
 
                                     <div className="col-span-1">
-                                        <Label>Last Page Read</Label>
+                                        <Label>Last Episode Watched</Label>
                                         <Input
                                             type="number"
                                             step="1"
-                                            value={data.last_page}
-                                            onChange={(e) => setData("last_page", parseInt(e.target.value))}
+                                            value={data.last_watched}
+                                            onChange={(e) => setData("last_watched", parseInt(e.target.value))}
                                         />
 
-                                        {errors.last_page && (
+                                        {errors.last_watched && (
                                             <p className="mt-1 text-sm text-destructive">
-                                                {errors.last_page}
+                                                {errors.last_watched}
                                             </p>
                                         )}
                                     </div>

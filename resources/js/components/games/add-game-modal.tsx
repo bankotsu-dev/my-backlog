@@ -473,7 +473,7 @@ export default function AddGameModal({
                         >
                             {processing
                                 ? "Saving..."
-                                : "Add Game"}
+                                : "Save"}
                         </Button>
 
                     </DialogFooter>

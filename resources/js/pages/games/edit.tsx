@@ -241,7 +241,6 @@ export default function Edit( { game, gameGenres } : Props) {
                                 <Label className="bg-white p-2 rounded-md dark:bg-black">Original Title</Label>
                                 <Input
                                     className="mt-3"
-                                    required
                                     value={data.original_title}
                                     onChange={(e) => setData("original_title", e.target.value)}
                                 />

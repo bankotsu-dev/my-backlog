@@ -1,39 +1,27 @@
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
+import type { Auth, Genre } from "@/types";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger, } from "@/components/ui/tabs";
-import { BookOpen, RotateCcw } from "lucide-react";
-import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import MultiSelect from "@/components/games/multi-select";
+import { MonitorPause, RotateCcw } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger, } from "@/components/ui/tabs";
 
 interface Props {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    serieId: number;
+    genres: Genre[];
 }
 
-interface BookForm {
-    [key: string]: string | number | null | File;
-    serie_id: number;
-    title: string;
-    original_title: string;
-    status: string;
-    last_page: number;
-    type: string;
-    order: number;
-    img_type: string;
-    url: string;
-    image: File | null;
-    rating: number;
-    notes: string;
-}
-
-export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
+export default function AddAnimeModal({open,onOpenChange,genres}: Props) {
+    const { auth } = usePage<{ auth: Auth }>().props;
 
     const {
         data,
@@ -42,30 +30,28 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
         processing,
         errors,
         reset,
-    } = useForm<BookForm>({
-        serie_id: serieId,
+    } = useForm({
+        user_id: auth.user.id,
         title: "",
         original_title: "",
         status: "Backlog",
-        last_page: 0,
-        type: "main",
-        order: 1,
-        img_type: "url",
+        description: "",
+        genres: [] as number[],
+        cover_type: "",
         url: "",
         image: null as File | null,
         rating: 0,
-        notes: "",
     });
 
     function handleSubmit(e:React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        post(route("books.store"), {
+        post(route("animes.store"), {
             forceFormData: true,
             preserveScroll: true,
 
             onSuccess: () => {
-                toast.success("The book has been saved.", { position: "top-right" });
+                toast.success("Anime has been saved.", { position: "top-right" });
                 reset();
                 onOpenChange(false);
             },
@@ -78,10 +64,10 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
 
     const coverPreview = data.image ? URL.createObjectURL(data.image) : data.url || null;
 
-    function resetCover() {
+    function restartCover() {
         setData("image", null);
         setData("url", '');
-        setData("img_type", 'url');
+        setData("cover_type", '');
     }
 
     return (
@@ -89,30 +75,31 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
             open={open}
             onOpenChange={onOpenChange}
         >
-            <DialogContent className="max-w-6xl p-0 flex flex-col" onInteractOutside={(e) => e.preventDefault()}>
+            <DialogContent className="max-w-6xl h-[90vh] p-0 flex flex-col" onInteractOutside={(e) => e.preventDefault()}>
                 <DialogHeader className="border-b p-6">
                     <DialogTitle>
-                        Add a new book
+                        Add a new anime
                     </DialogTitle>
 
                     <DialogDescription>
-                        Complete the information.
+                        Complete the anime information.
                     </DialogDescription>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit} className="flex-1 flex flex-col overflow-hidden">
                     <ScrollArea className="flex-1">
                         <div className="grid grid-cols-12 gap-8 p-6">
+                            {/* Cover */}
                             <div className="col-span-3">
                                 <div className="aspect-[2/3] overflow-hidden rounded-xl border bg-muted">
                                     {coverPreview ? (
                                         <img
                                             src={coverPreview}
-                                            className="object-fill"
+                                            className="h-full w-full object-fill"
                                         />
                                     ) : (
                                         <div className="flex h-full items-center justify-center">
-                                            <BookOpen className="h-20 w-20 text-muted-foreground/40"/>
+                                            <MonitorPause className="h-20 w-20 text-muted-foreground/40"/>
                                         </div>
                                     )}
                                 </div>
@@ -132,13 +119,15 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
                                                     value={data.url}
                                                     onChange={(e) => {
                                                         setData("url", e.target.value);
-                                                        setData("img_type", 'url');
                                                         if (e.target.value) {
+                                                            setData("cover_type", 'url');
                                                             setData("image", null);
+                                                        }else{
+                                                            setData("cover_type", '');
                                                         }
                                                     }}
                                                     />
-                                                <Button type="button" className="rounded-l-none border-l" variant="ghost" onClick={() => resetCover()}>
+                                                <Button type="button" className="rounded-l-none border-l" variant="ghost" onClick={() => restartCover()}>
                                                     <RotateCcw />
                                                 </Button>
                                             </div>
@@ -158,7 +147,7 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
                                                         ? data.image.name
                                                         : "No file selected"}
                                                 </span>
-                                                <Button type="button" className="rounded-l-none border-l" variant="ghost" onClick={() => resetCover()}>
+                                                <Button type="button" className="rounded-l-none border-l" variant="ghost" onClick={() => restartCover()}>
                                                     <RotateCcw />
                                                 </Button>
                                                 <Input
@@ -169,9 +158,11 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
                                                     onChange={(e) => {
                                                         const file = e.target.files?.[0];
                                                         setData("image", file ?? null);
-                                                        if (file) {
+                                                        if(file) {
                                                             setData("url", "");
-                                                            setData("img_type", 'upload');
+                                                            setData("cover_type", 'upload');
+                                                        }else{
+                                                            setData("cover_type", '');
                                                         }
                                                     }}
                                                 />
@@ -179,25 +170,25 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
                                         </TabsContent>
                                     </Tabs>
 
-                                    {errors.image && (
-                                        <p className="mt-1 text-sm text-destructive">
-                                            {errors.image}
-                                        </p>
-                                    )}
                                     {errors.url && (
                                         <p className="mt-1 text-sm text-destructive">
                                             {errors.url}
                                         </p>
                                     )}
+                                    {errors.image && (
+                                        <p className="mt-1 text-sm text-destructive">
+                                            {errors.image}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
+
                             {/* Form */}
                             <div className="col-span-9 space-y-6">
                                 <div className="grid grid-cols-2 gap-5">
                                     <div className="col-span-2">
                                         <Label>Title</Label>
                                         <Input
-                                            required
                                             autoFocus
                                             value={data.title}
                                             onChange={(e) => setData("title", e.target.value)}
@@ -224,7 +215,7 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
                                         )}
                                     </div>
 
-                                    <div className="col-span-1">
+                                    <div>
                                         <Label>Status</Label>
                                         <Select
                                             value={data.status}
@@ -238,8 +229,8 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
                                                 <SelectItem value="Backlog">
                                                     Backlog
                                                 </SelectItem>
-                                                <SelectItem value="Reading">
-                                                    Reading
+                                                <SelectItem value="Playing">
+                                                    Watching
                                                 </SelectItem>
                                                 <SelectItem value="Completed">
                                                     Completed
@@ -253,68 +244,25 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    
-                                    <div className="col-span-1">
-                                        <Label>Type</Label>
-                                        <Select
-                                            value={data.type}
-                                            onValueChange={(value) =>setData("type",value)}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue />
-                                            </SelectTrigger>
 
-                                            <SelectContent>
-                                                <SelectItem value="main">
-                                                    Main
-                                                </SelectItem>
-                                                <SelectItem value="prequel">
-                                                    Prequel
-                                                </SelectItem>
-                                                <SelectItem value="sequel">
-                                                    Sequel
-                                                </SelectItem>
-                                                <SelectItem value="spin-off">
-                                                    Spin-off
-                                                </SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    <div className="col-span-1">
-                                        <Label>Order</Label>
-                                        <Input
-                                            type="number"
-                                            step="1"
-                                            min="1"
-                                            value={data.order}
-                                            onChange={(e) => setData("order", parseInt(e.target.value))}
+                                    <div className="col-span-2">
+                                        <Label>Genres</Label>
+                                        <MultiSelect
+                                            options={genres}
+                                            value={data.genres}
+                                            onChange={(value) => setData("genres", value)}
+                                            getValue={(genre) => genre.id}
+                                            getLabel={(genre) => genre.genre}
                                         />
-
-                                        {errors.order && (
-                                            <p className="mt-1 text-sm text-destructive">
-                                                {errors.order}
-                                            </p>
-                                        )}
                                     </div>
+                                </div>
 
-                                    <div className="col-span-1">
-                                        <Label>Last Page Read</Label>
-                                        <Input
-                                            type="number"
-                                            step="1"
-                                            value={data.last_page}
-                                            onChange={(e) => setData("last_page", parseInt(e.target.value))}
-                                        />
+                                <Separator />
+                                <div className="space-y-6 grid grid-cols-12 gap-4 items-end">
 
-                                        {errors.last_page && (
-                                            <p className="mt-1 text-sm text-destructive">
-                                                {errors.last_page}
-                                            </p>
-                                        )}
-                                    </div>
+                                    {/* Rating */}
 
-                                    <div className="col-span-1">
+                                    <div className="col-span-6">
                                         <Label>Rating ({data.rating}/5)</Label>
                                         <Slider
                                             className="mt-4"
@@ -322,7 +270,7 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
                                             max={5}
                                             step={1}
                                             value={[data.rating]}
-                                            onValueChange={(value) => setData("rating", value[0])}
+                                            onValueChange={(value) =>setData("rating", value[0])}
                                         />
 
                                         {errors.rating && (
@@ -332,20 +280,22 @@ export default function AddBookModal({ open, onOpenChange, serieId, }: Props) {
                                         )}
                                     </div>
 
-                                    <div className="col-span-2">
-                                        <Label>Notes</Label>
+                                    {/* Description */}
+                                    <div className="col-span-12">
+                                        <Label>Description</Label>
                                         <Textarea
-                                            rows={4}
-                                            value={data.notes}
-                                            onChange={(e) => setData("notes",e.target.value)}
+                                            rows={5}
+                                            value={data.description}
+                                            onChange={(e) =>setData("description",e.target.value)}
                                         />
 
-                                        {errors.notes && (
+                                        {errors.description && (
                                             <p className="mt-1 text-sm text-destructive">
-                                                {errors.notes}
+                                                {errors.description}
                                             </p>
                                         )}
                                     </div>
+
                                 </div>
                             </div>
                         </div>

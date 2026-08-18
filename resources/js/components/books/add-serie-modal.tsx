@@ -202,7 +202,7 @@ export default function AddSerieModal({
                         >
                             {processing
                                 ? "Saving..."
-                                : "Add Serie"}
+                                : "Save"}
                         </Button>
 
                     </DialogFooter>

@@ -50,3 +50,39 @@ export interface Filters {
     perPage: number;
     status: string;
 }
+
+export interface Genre {
+    id: number;
+    genre: string;
+}
+
+export interface Season {
+    id: number;
+    anime_id: number;
+    title: string;
+    original_title: string | null;
+    status: string;
+    last_watched: number | null;
+    type: string;
+    order: number;
+    cover_type: string | null;
+    cover_url: string | null;
+    cover_path: string | null;
+    rating: number | null;
+    notes: string | null;
+}
+
+export interface Anime {
+    id: number;
+    user_id: number;
+    title: string;
+    original_title: string | null;
+    status: string;
+    description: string | null;
+    cover_type: string | null;
+    cover_url: string | null;
+    cover_path: string | null;
+    rating: number | null;
+    genres: Genre[] | null;
+    seasons: Season[] | null;
+}

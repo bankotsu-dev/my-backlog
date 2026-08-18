@@ -1,4 +1,5 @@
 import { useForm } from "@inertiajs/react";
+import { type Season } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
@@ -10,28 +11,12 @@ import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
-interface Book {
-    id: number;
-    serie_id: number;
-    title: string;
-    original_title: string;
-    status: string;
-    last_page: number;
-    type: string;
-    order: number;
-    cover_type: string;
-    cover_url: string;
-    cover_path: string;
-    rating: number;
-    notes: string;
-}
-
 interface Props {
-    book: Book
+    season: Season
     closeEditing: () => void
 }
 
-export default function BookForm({ book, closeEditing }: Props) {
+export default function SeasonForm({ season, closeEditing }: Props) {
 
     const {
             data,
@@ -43,17 +28,17 @@ export default function BookForm({ book, closeEditing }: Props) {
             transform
         } = useForm({
             _method: "PUT",
-            title: book.title,
-            original_title: book.original_title || "",
-            status: book.status,
-            last_page: book.last_page || 0,
-            type: book.type,
-            order: book.order,
+            title: season.title,
+            original_title: season.original_title || "",
+            status: season.status,
+            last_watched: season.last_watched || 0,
+            type: season.type,
+            order: season.order,
             img_type: "url",
-            url: book.cover_url || "",
+            url: season.cover_url || "",
             image: null as File | null,
-            rating: book.rating || 0,
-            notes: book.notes || "",
+            rating: season.rating || 0,
+            notes: season.notes || "",
             updateCoverUrl: false as boolean,
         });
 
@@ -64,18 +49,18 @@ export default function BookForm({ book, closeEditing }: Props) {
 
         transform((data) => ({
             ...data,
-            ...(data.url === book.cover_url && {
+            ...(data.url === season.cover_url && {
                 url: undefined,
                 updateCoverURL: false,
             }),
         }));
 
-        post(route("books.update", book.id), {
+        post(route("seasons.update", season.id), {
             forceFormData: true,
             preserveScroll: true,
 
             onSuccess: () => {
-                toast.success("The book has been saved.", { position: "top-right" });
+                toast.success("The season has been saved.", { position: "top-right" });
                 reset();
                 closeEditing();
             },
@@ -88,7 +73,7 @@ export default function BookForm({ book, closeEditing }: Props) {
 
     function resetCover() {
         setData("image", null);
-        setData("url", book.cover_url || '');
+        setData("url", season.cover_url || '');
         setData("img_type", 'url');
         setData("updateCoverUrl", false);
     }
@@ -232,8 +217,8 @@ export default function BookForm({ book, closeEditing }: Props) {
                                         <SelectItem value="Backlog">
                                             Backlog
                                         </SelectItem>
-                                        <SelectItem value="Reading">
-                                            Reading
+                                        <SelectItem value="Watching">
+                                            Watching
                                         </SelectItem>
                                         <SelectItem value="Completed">
                                             Completed
@@ -259,20 +244,26 @@ export default function BookForm({ book, closeEditing }: Props) {
                                     </SelectTrigger>
 
                                     <SelectContent>
-                                        <SelectItem value="main">
-                                            Main
+                                        <SelectItem value="season">
+                                            Season
                                         </SelectItem>
-                                        <SelectItem value="prequel">
-                                            Prequel
+                                        <SelectItem value="movie">
+                                            Movie
                                         </SelectItem>
-                                        <SelectItem value="sequel">
-                                            Sequel
+                                        <SelectItem value="ova">
+                                            Ova
                                         </SelectItem>
-                                        <SelectItem value="spin-off">
-                                            Spin-off
+                                        <SelectItem value="special">
+                                            Special
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
+
+                                {errors.type && (
+                                    <p className="mt-1 text-sm text-destructive">
+                                        {errors.type}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="col-span-1">
@@ -293,17 +284,17 @@ export default function BookForm({ book, closeEditing }: Props) {
                             </div>
 
                             <div className="col-span-1">
-                                <Label>Last Page Read</Label>
+                                <Label>Last Episode Watched</Label>
                                 <Input
                                     type="number"
                                     step="1"
-                                    value={data.last_page}
-                                    onChange={(e) => setData("last_page", parseInt(e.target.value))}
+                                    value={data.last_watched}
+                                    onChange={(e) => setData("last_watched", parseInt(e.target.value))}
                                 />
 
-                                {errors.last_page && (
+                                {errors.last_watched && (
                                     <p className="mt-1 text-sm text-destructive">
-                                        {errors.last_page}
+                                        {errors.last_watched}
                                     </p>
                                 )}
                             </div>

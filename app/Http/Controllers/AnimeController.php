@@ -28,8 +28,8 @@ class AnimeController extends Controller
         ->withQueryString();
 
         return inertia('animes/index', [
-            'games' => $games,
-            'animeGenres' => AnimeGenre::all(),
+            'animes' => $animes,
+            'genres' => AnimeGenre::all(),
             'filters' => [
                 'search' => $request->search,
                 'perPage' => $perPage,    
@@ -51,7 +51,32 @@ class AnimeController extends Controller
      */
     public function store(StoreAnimeRequest $request)
     {
-        //
+        try {
+            $anime = Anime::create($request->validated());
+            $anime->genres()->sync($request->genres);
+            if( $request->cover_type === 'url' && $request->url) {
+                $anime->update([
+                    'cover_type' => 'url',
+                    'cover_url' => $request->url,
+                ]);
+            }
+            if( $request->cover_type === 'upload' && $request->hasFile('image')) {
+                $uuid = (string) Str::uuid();
+                $extension = $request->file('image')->extension();
+                $path = "animes/". auth()->user()->id ."/{$uuid}.{$extension}";
+                Storage::disk('b2')->put(
+                    $path,
+                    file_get_contents($request->file('image')->getRealPath())
+                );
+                $anime->update([
+                    'cover_type' => 'upload',
+                    'cover_path' => $path,
+                ]);
+            }
+            return back();
+        } catch (\Throwable $e) {
+            return back()->withErrors(['error' => $e->getMessage(),]);
+        }
     }
 
     /**
@@ -59,7 +84,10 @@ class AnimeController extends Controller
      */
     public function show(Anime $anime)
     {
-        //
+        return inertia('animes/show', [
+            'anime' => $anime->load('genres')->load('seasons'),
+            'genres' => AnimeGenre::all(),
+        ]);
     }
 
     /**

@@ -12,7 +12,7 @@ class StoreSeasonRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,18 @@ class StoreSeasonRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'anime_id' => ['required', 'exists:animes,id'],
+            'title' => ['required', 'max:255'],
+            'original_title' => ['nullable', 'max:255'],
+            'status' => ['required', 'in:Backlog,Reading,Completed,Paused,Dropped'],
+            'last_watched' => ['nullable', 'integer', 'min:0'],
+            'type' => ['required', 'in:season,movie,ova,special'],
+            'order' => ['required', 'integer', 'min:1'],
+            'img_type' => ['nullable', 'in:url,upload'],
+            'url' => ['nullable', 'url', 'max:255'],
+            'image' => ['nullable', 'image', 'max:1024'],
+            'rating' => ['nullable', 'integer', 'min:0', 'max:5'],
+            'notes' => ['nullable', 'max:64000'],
         ];
     }
 }

@@ -20,6 +20,10 @@ Route::middleware(['auth'])->group(function () {
 
     //Animes
     Route::get('animes', [AnimeController::class, 'index'])->name('animes.index');
+    Route::post('animes', [AnimeController::class, 'store'])->name('animes.store');
+    Route::get('animes/{anime}', [AnimeController::class, 'show'])->name('animes.show');
+    Route::put('animes/{anime}', [AnimeController::class, 'update'])->name('animes.update');
+    Route::delete('animes/{anime}', [AnimeController::class, 'destroy'])->name('animes.destroy');
 
     //Seasons
     Route::post('seasons', [SeasonController::class, 'store'])->name('seasons.store');

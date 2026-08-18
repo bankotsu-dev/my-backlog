@@ -1,0 +1,73 @@
+import { useState } from "react";
+import { Season } from "@/types";
+import { Card } from "@/components/ui/card";
+import { BookOpen, Star } from "lucide-react";
+import ShowEditSeasonModal from "@/components/animes/show-edit-season-modal";
+
+export default function SeasonCard({ season }: { season: Season }) {
+    const [openModal, setOpenModal] = useState(false);
+
+    return (
+        <div key={season.id}>
+            <ShowEditSeasonModal open={openModal} onOpenChange={setOpenModal} season={season} />
+            <Card
+                onClick={() => setOpenModal(true)} 
+                className="overflow-hidden border-0 bg-transparent shadow-none group hover:cursor-pointer"
+            >
+                <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-muted">
+                    {season.cover_url ? (
+                        <img
+                            src={season.cover_url}
+                            alt={season.title}
+                            className="h-full w-full object-fill transition duration-300 group-hover:scale-105"
+                        />
+                    ) : (
+                        <div className="flex h-full items-center justify-center">
+                            <BookOpen className="h-16 w-16 text-muted-foreground" />
+                        </div>
+                    )}
+
+                    {/* Order */}
+                    <div className="absolute left-2 top-2 rounded-md bg-black/70 px-2 py-1 text-xs font-semibold text-white">
+                        {String(season.order).padStart(2, '0')}
+                    </div>
+                    <div className="absolute right-2 bottom-2 rounded-md bg-black/70 px-2 py-1 text-xs font-semibold text-white">
+                        {season.status}
+                    </div>
+                </div>
+
+                <div className="mt-3">
+                    <h3 className="line-clamp-2 font-semibold transition group-hover:text-violet-400">
+                        {season.title}
+                    </h3>
+
+                    {season.original_title && (
+                        <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
+                            {season.original_title}
+                        </p>
+                    )}
+
+                    {/* Rating */}
+                    {season.rating != null && season.rating != 0 && (
+                        <div className="mt-2 flex items-center gap-1">
+                            {Array.from({ length: 5 }).map((_, index) => (
+                                <Star
+                                    key={index}
+                                    className={`h-4 w-4 ${
+                                        index < season.rating!
+                                            ? 'fill-yellow-400 text-yellow-400'
+                                            : 'text-muted'
+                                    }`}
+                                />
+                            ))}
+
+                            <span className="ml-1 text-xs text-muted-foreground">
+                                {season.rating}
+                            </span>
+                        </div>
+                    )}
+                </div>
+            </Card>
+        </div>
+    );
+}
