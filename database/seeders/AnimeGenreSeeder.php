@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\AnimeGenre;
 
 class AnimeGenreSeeder extends Seeder
 {
@@ -13,7 +13,7 @@ class AnimeGenreSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('anime_genres')->insert([
+        AnimeGenre::insert([
             ['genre' => 'Action'],
             ['genre' => 'Adventure'],
             ['genre' => 'Cars'],

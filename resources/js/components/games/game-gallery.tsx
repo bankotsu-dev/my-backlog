@@ -1,20 +1,14 @@
 import { useState } from "react";
 import { useForm } from '@inertiajs/react';
+import { type GameImage } from "@/types";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2, Plus } from "lucide-react";
 import GalleryImageViewer from "@/components/games/gallery-image-viewer";
 import AddImageModal from "@/components/games/add-image-modal";
+import { Trash2, Plus } from "lucide-react";
 
-interface Image {
-    id: number;
-    game_id: number;
-    source: string;
-    url: string;
-    path: string;
-}
-export default function GameGallery({ images, gameId }: { images: Image[], gameId: number }) {
+export default function GameGallery({ images, gameId }: { images: GameImage[], gameId: number }) {
 
     const { processing, delete: destroy } = useForm();
     const [open, setOpen] = useState(false);

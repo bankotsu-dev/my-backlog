@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BookGenre extends Model
 {
-    //
+    protected $fillable = [
+        'genre'
+    ];
 }

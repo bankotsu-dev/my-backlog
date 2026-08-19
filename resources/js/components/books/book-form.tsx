@@ -1,4 +1,5 @@
 import { useForm } from "@inertiajs/react";
+import { type Book } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
@@ -10,21 +11,6 @@ import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
-interface Book {
-    id: number;
-    serie_id: number;
-    title: string;
-    original_title: string;
-    status: string;
-    last_page: number;
-    type: string;
-    order: number;
-    cover_type: string;
-    cover_url: string;
-    cover_path: string;
-    rating: number;
-    notes: string;
-}
 
 interface Props {
     book: Book

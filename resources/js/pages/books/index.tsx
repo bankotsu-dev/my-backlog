@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem, PageLinkItem, Filters } from '@/types';
+import { type BreadcrumbItem, PageLinkItem, Filters, Genre, Serie } from '@/types';
 import { Head, useForm, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -17,20 +17,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface BookGenre {
-    id: number;
-    genre: string;
-}
-
-interface Serie {
-    id: number;
-    title: string;
-    original_title: string;
-    author: string;
-    status: string;
-    genres: BookGenre[];
-}
-
 interface SeriePaginated {
     data: Serie[];
     links: PageLinkItem[];
@@ -38,7 +24,7 @@ interface SeriePaginated {
 
 interface Props {
     series: SeriePaginated;
-    bookGenres: BookGenre[];
+    bookGenres: Genre[];
     filters: Filters;
 }
 

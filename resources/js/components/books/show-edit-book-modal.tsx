@@ -2,22 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import BookDetails from "@/components/books/book-details";
 import BookForm from "@/components/books/book-form";
-
-interface Book {
-    id: number;
-    serie_id: number;
-    title: string;
-    original_title: string;
-    status: string;
-    last_page: number;
-    type: string;
-    order: number;
-    cover_type: string;
-    cover_url: string;
-    cover_path: string;
-    rating: number;
-    notes: string;
-}
+import { type Book } from "@/types";
 
 interface Props {
     open: boolean;

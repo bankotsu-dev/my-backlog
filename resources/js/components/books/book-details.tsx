@@ -1,23 +1,8 @@
 import { useForm } from '@inertiajs/react';
+import { type Book } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { BookOpen, Star } from 'lucide-react';
-
-interface Book {
-    id: number;
-    serie_id: number;
-    title: string;
-    original_title?: string | null;
-    status: string;
-    last_page?: number | null;
-    rating?: number | null;
-    type: string;
-    order: number;
-    cover_type?: string | null;
-    cover_url?: string | null;
-    cover_path?: string | null;
-    notes?: string | null;
-}
 
 interface Props {
     book: Book;

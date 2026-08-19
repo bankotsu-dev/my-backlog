@@ -1,23 +1,8 @@
 import { useState } from "react";
+import { type Book } from "@/types";
 import { Card } from "@/components/ui/card";
 import { BookOpen, Star } from "lucide-react";
 import ShowEditBookModal from "@/components/books/show-edit-book-modal";
-
-interface Book {
-    id: number;
-    serie_id: number;
-    title: string;
-    original_title: string;
-    status: string;
-    last_page: number;
-    type: string;
-    order: number;
-    cover_type: string;
-    cover_url: string;
-    cover_path: string;
-    rating: number;
-    notes: string;
-}
 
 export default function BookCard({ book }: { book: Book }) {
     const [openModal, setOpenModal] = useState(false);

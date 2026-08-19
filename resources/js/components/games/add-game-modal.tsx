@@ -1,4 +1,5 @@
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
+import type { Auth, Genre } from "@/types";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,20 +11,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { usePage } from "@inertiajs/react";
-import type { Auth } from "@/types";
 import MultiSelect from "@/components/games/multi-select";
-import { Gamepad2, RotateCcw } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger, } from "@/components/ui/tabs";
+import { Gamepad2, RotateCcw } from "lucide-react";
 
-interface GameGenre {
-    id: number;
-    genre: string;
-}
 interface Props {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    gameGenres: GameGenre[];
+    gameGenres: Genre[];
 }
 
 interface GameForm {

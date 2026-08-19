@@ -3,45 +3,15 @@ import { Head, useForm } from '@inertiajs/react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, Genre, Serie } from '@/types';
 import { Edit, Plus, Star, Trash2 } from 'lucide-react';
 import BookSection from '@/components/books/book-section';
 import AddBookModal from "@/components/books/add-book-modal";
 import EditSerieModal from "@/components/books/edit-serie-modal";
 
-interface BookGenre {
-    id: number;
-    genre: string;
-}
-
-interface Book {
-    id: number;
-    serie_id: number;
-    title: string;
-    original_title: string;
-    status: string;
-    last_page: number;
-    type: string;
-    order: number;
-    cover_type: string;
-    cover_url: string;
-    cover_path: string;
-    rating: number;
-}
-
-interface Serie {
-    id: number;
-    title: string;
-    original_title: string;
-    author: string;
-    status: string;
-    genres: BookGenre[];
-    books: Book[];
-}
-
 interface Props {
     serie: Serie;
-    genres: BookGenre[];
+    genres: Genre[];
 }
 
 const sections = [

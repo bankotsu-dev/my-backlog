@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, Genre, Game } from '@/types';
 import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
 import { Label } from '@/components/ui/label';
@@ -25,31 +25,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface GameGenre {
-    id: number;
-    genre: string;
-}
-
-interface Game {
-    id: number;
-    title: string;
-    original_title: string;
-    status: string;
-    description: string | null;
-    notes: string | null;
-    cover: string | null;
-    background_image: string | null;
-    developer: string | null;
-    publisher: string | null;
-    rating: number;
-    hg: boolean;
-    version: string | null;
-    genres: GameGenre[];
-}
-
 interface Props {
     game: Game;
-    gameGenres: GameGenre[];
+    gameGenres: Genre[];
 }
 
 export default function Edit( { game, gameGenres } : Props) {
@@ -57,7 +35,7 @@ export default function Edit( { game, gameGenres } : Props) {
     const { data, setData, post, processing, errors, transform } = useForm({
         _method: "PUT",
         title: game.title,
-        original_title: game.original_title,
+        original_title: game.original_title ?? '',
         status: game.status,
         description: game.description ?? '',
         genres: game.genres.map((genre) => genre.id),
@@ -68,7 +46,7 @@ export default function Edit( { game, gameGenres } : Props) {
         background_url: game.background_image ?? '',
         developer: game.developer ?? '',
         publisher: game.publisher ?? '',
-        rating: game.rating,
+        rating: game.rating ?? 0,
         hg: game.hg,
         version: game.version ?? '',
         updateCoverURL: false as boolean,

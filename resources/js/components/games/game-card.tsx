@@ -1,29 +1,8 @@
+import { Link } from '@inertiajs/react';
+import { type Game } from '@/types';
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Link } from '@inertiajs/react';
 import { Star, Gamepad2 } from "lucide-react";
-
-interface GameGenre {
-    id: number;
-    genre: string;
-}
-
-interface Game {
-    id: number;
-    title: string;
-    original_title: string;
-    status: string;
-    description: string | null;
-    notes: string | null;
-    cover: string | null;
-    background_image: string | null;
-    developer: string | null;
-    publisher: string | null;
-    rating: number;
-    hg: boolean;
-    version: string | null;
-    genres: GameGenre[];
-}
 
 interface Props {
     game: Game;
@@ -81,7 +60,7 @@ export default function GameCard({ game }: Props) {
                                     <Star
                                         key={index}
                                         className={`h-5 w-5 ${
-                                            index < game.rating
+                                            index < (game.rating || 0)
                                                 ? "fill-yellow-400 text-yellow-400"
                                                 : "text-muted"
                                         }`}

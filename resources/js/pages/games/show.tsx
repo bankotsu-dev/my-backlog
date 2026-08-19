@@ -1,43 +1,12 @@
 import { Head, useForm, Link } from '@inertiajs/react';
+import { type BreadcrumbItem, Game } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Edit, Gamepad2, Star, Trash2 } from "lucide-react";
-import { type BreadcrumbItem } from '@/types';
 import GameGallery from '@/components/games/game-gallery';
-
-interface GameGenre {
-    id: number;
-    genre: string;
-}
-
-interface Image {
-    id: number;
-    game_id: number;
-    source: string;
-    url: string;
-    path: string;
-}
-
-interface Game {
-    id: number;
-    title: string;
-    original_title: string;
-    status: string;
-    description: string | null;
-    notes: string | null;
-    cover: string | null;
-    background_image: string | null;
-    developer: string | null;
-    publisher: string | null;
-    rating: number;
-    hg: boolean;
-    version: string | null;
-    genres: GameGenre[];
-    images: Image[];
-}
 
 interface Props {
     game: Game;

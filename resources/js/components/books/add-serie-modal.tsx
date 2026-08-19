@@ -1,4 +1,5 @@
 import { useForm } from "@inertiajs/react";
+import { type Genre } from "@/types";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,14 +11,10 @@ import { usePage } from "@inertiajs/react";
 import type { Auth } from "@/types";
 import MultiSelect from "@/components/games/multi-select";
 
-interface BookGenre {
-    id: number;
-    genre: string;
-}
 interface Props {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    gameGenres: BookGenre[];
+    gameGenres: Genre[];
 }
 
 interface SerieForm {

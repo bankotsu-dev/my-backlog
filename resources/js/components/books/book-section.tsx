@@ -1,19 +1,5 @@
 import BookCard from "@/components/books/book-card";
-
-interface Book {
-    id: number;
-    serie_id: number;
-    title: string;
-    original_title: string;
-    status: string;
-    last_page: number;
-    type: string;
-    order: number;
-    cover_type: string;
-    cover_url: string;
-    cover_path: string;
-    rating: number;
-}
+import { type Book } from "@/types";
 
 export default function BookSection({
     title,

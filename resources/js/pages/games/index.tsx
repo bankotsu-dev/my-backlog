@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem, PageLinkItem, Filters } from '@/types';
+import { type BreadcrumbItem, PageLinkItem, Filters, Genre, Game } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { useState } from "react";
 import AddGameModal from '@/components/games/add-game-modal';
@@ -16,28 +16,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-interface GameGenre {
-    id: number;
-    genre: string;
-}
-
-interface Game {
-    id: number;
-    title: string;
-    original_title: string;
-    status: string;
-    description: string | null;
-    notes: string | null;
-    cover: string | null;
-    background_image: string | null;
-    developer: string | null;
-    publisher: string | null;
-    rating: number;
-    hg: boolean;
-    version: string | null;
-    genres: GameGenre[];
-}
-
 interface GamePaginated {
     data: Game[];
     links: PageLinkItem[];
@@ -45,7 +23,7 @@ interface GamePaginated {
 
 interface Props {
     games: GamePaginated;
-    gameGenres: GameGenre[];
+    gameGenres: Genre[];
     filters: Filters;
 }
 

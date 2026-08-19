@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class GameGenre extends Model
 {
-    //
+    protected $fillable = [
+        'genre'
+    ];
 }
