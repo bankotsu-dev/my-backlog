@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger, } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { BookOpen, RotateCcw } from "lucide-react";
+import { MonitorPause, RotateCcw } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
@@ -91,7 +91,7 @@ export default function SeasonForm({ season, closeEditing }: Props) {
                                 />
                             ) : (
                                 <div className="flex h-full items-center justify-center">
-                                    <BookOpen className="h-20 w-20 text-muted-foreground/40"/>
+                                    <MonitorPause className="h-20 w-20 text-muted-foreground"/>
                                 </div>
                             )}
                         </div>

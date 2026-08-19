@@ -92,7 +92,7 @@ export default function BookForm({ book, closeEditing }: Props) {
                                 />
                             ) : (
                                 <div className="flex h-full items-center justify-center">
-                                    <BookOpen className="h-20 w-20 text-muted-foreground/40"/>
+                                    <BookOpen className="h-20 w-20 text-muted-foreground"/>
                                 </div>
                             )}
                         </div>

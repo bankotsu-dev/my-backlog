@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Season } from "@/types";
 import { Card } from "@/components/ui/card";
-import { BookOpen, Star } from "lucide-react";
+import { MonitorPause, Star } from "lucide-react";
 import ShowEditSeasonModal from "@/components/animes/show-edit-season-modal";
 
 export default function SeasonCard({ season }: { season: Season }) {
@@ -23,7 +23,7 @@ export default function SeasonCard({ season }: { season: Season }) {
                         />
                     ) : (
                         <div className="flex h-full items-center justify-center">
-                            <BookOpen className="h-16 w-16 text-muted-foreground" />
+                            <MonitorPause className="h-16 w-16 text-muted-foreground" />
                         </div>
                     )}
 

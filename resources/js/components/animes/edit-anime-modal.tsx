@@ -108,7 +108,7 @@ export default function EditAnimeModal({open,onOpenChange,genres,anime}: Props) 
                                         />
                                     ) : (
                                         <div className="flex h-full items-center justify-center">
-                                            <MonitorPause className="h-20 w-20 text-muted-foreground/40"/>
+                                            <MonitorPause className="h-20 w-20 text-muted-foreground"/>
                                         </div>
                                     )}
                                 </div>
