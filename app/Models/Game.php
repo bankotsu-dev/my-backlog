@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
 class Game extends Model
 {
@@ -85,19 +84,4 @@ class Game extends Model
             $query->where('status', $value);
         }
     }
-
-    protected static function booted()
-    {
-        static::saving(function ($book) {
-            if ($book->isDirty('title')) {
-                $book->slug = Str::slug($book->title) . '-' . Str::uuid();
-            }
-        });
-    }
-
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
-
 }

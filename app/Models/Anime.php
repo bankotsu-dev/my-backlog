@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
 class Anime extends Model
 {
@@ -58,19 +57,5 @@ class Anime extends Model
                 return $this->getRawOriginal('cover_url');
             }
         );
-    }
-
-    protected static function booted()
-    {
-        static::saving(function ($anime) {
-            if ($anime->isDirty('title')) {
-                $anime->slug = Str::slug($anime->title) . '-' . Str::uuid();
-            }
-        });
-    }
-
-    public function getRouteKeyName()
-    {
-        return 'slug';
     }
 }

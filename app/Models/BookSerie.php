@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
 class BookSerie extends Model
 {
@@ -43,19 +42,5 @@ class BookSerie extends Model
         if( $value) {
             $query->where('status', $value);
         }
-    }
-
-    protected static function booted()
-    {
-        static::saving(function ($serie) {
-            if ($serie->isDirty('title')) {
-                $serie->slug = Str::slug($serie->title) . '-' . Str::uuid();
-            }
-        });
-    }
-
-    public function getRouteKeyName()
-    {
-        return 'slug';
     }
 }
