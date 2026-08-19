@@ -33,7 +33,7 @@ export default function GameCard({ game }: Props) {
 
     return (
         <Card className="overflow-hidden p-0 border transition hover:border-violet-500">
-            <Link href={route('games.show', game.id)}>
+            <Link href={route('games.show', game.slug)}>
                 <div className="flex">
                     <div className="flex aspect-[2/3] w-40 shrink-0 items-center justify-center bg-muted/40">
                         {game.cover ? (
