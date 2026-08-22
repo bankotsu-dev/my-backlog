@@ -3,8 +3,8 @@ echo "Running composer"
 composer global require hirak/prestissimo
 composer install --no-dev --working-dir=/var/www/html
 
-node --version
-npm --version
+set -e
+set -x
 
 echo "Installing NPM dependencies..."
 npm ci
