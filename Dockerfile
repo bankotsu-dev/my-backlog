@@ -1,8 +1,24 @@
-FROM richarvey/nginx-php-fpm:3.1.6
+# ─────────────────────────────
+# Frontend
+# ─────────────────────────────
+FROM node:22-alpine AS frontend
 
-# Install Node.js and npm
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
-&& apt-get install -y nodejs
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+RUN npm run build
+
+
+# ─────────────────────────────
+# Laravel
+# ─────────────────────────────
+
+FROM richarvey/nginx-php-fpm:3.1.6
 
 COPY . .
 

@@ -6,11 +6,11 @@ composer install --no-dev --working-dir=/var/www/html
 set -e
 set -x
 
-echo "Installing NPM dependencies..."
-npm ci
+#echo "Installing NPM dependencies..."
+#npm ci
 
-echo "Building frontend..."
-npm run build
+#echo "Building frontend..."
+#npm run build
 
 echo "Caching config..."
 php artisan config:cache
