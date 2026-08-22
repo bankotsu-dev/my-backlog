@@ -8,7 +8,7 @@ export default function GameCard({ game }: { game: Game }) {
         <div key={game.id}>
             <Link href={route('games.show', game.id)}>
                 <Card
-                    className="overflow-hidden border-0 bg-transparent shadow-none group hover:cursor-pointer"
+                    className="overflow-hidden border-0 bg-transparent shadow-none group hover:cursor-pointer max-w-32 xl:max-w-64"
                 >
                     <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-muted">
                         {game.cover ? (

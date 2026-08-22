@@ -25,7 +25,7 @@ class StoreGameImageRequest extends FormRequest
         return [
             'game_id' => ['required', 'exists:games,id'],
             'source' => ['required', 'in:url,upload'],
-            'url' => ['nullable','url', 'max:255', 'required_if:source,url'],
+            'url' => ['nullable','url', 'max:64000', 'required_if:source,url'],
             'image' => ['nullable', 'image', 'max:1024', 'required_if:source,upload'],
         ];
     }

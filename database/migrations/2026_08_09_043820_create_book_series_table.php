@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('original_title')->nullable();
             $table->text('author')->nullable();
+            $table->string('cover_type')->nullable();
+            $table->text('cover_url')->nullable();
+            $table->string('cover_path')->nullable();
             $table->text('status');
             $table->timestamps();
         });

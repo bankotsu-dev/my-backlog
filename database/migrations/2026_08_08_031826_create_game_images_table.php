@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('game_id')->constrained()->onDelete('cascade');
             $table->enum('source', ['upload', 'url']);
-            $table->string('url')->nullable();
+            $table->text('url')->nullable();
             $table->string('path')->nullable();
             $table->timestamps();
         });

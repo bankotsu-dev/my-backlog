@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('status');
             $table->text('description')->nullable();
             $table->string('cover_type')->nullable();
-            $table->string('cover_url')->nullable();
+            $table->text('cover_url')->nullable();
             $table->string('cover_path')->nullable();
             $table->unsignedTinyInteger('rating')->nullable();
             $table->timestamps();

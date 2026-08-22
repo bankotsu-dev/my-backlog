@@ -30,7 +30,7 @@ class StoreAnimeRequest extends FormRequest
             'description' => ['nullable', 'max:64000'],
             'genres' => ['nullable', 'array', 'exists:anime_genres,id'],
             'cover_type' => ['nullable', 'in:url,upload'],
-            'url' => ['nullable', 'url', 'max:255'],
+            'url' => ['nullable', 'url', 'max:64000'],
             'image' => ['nullable', 'image', 'max:1024'],
             'rating' => ['nullable', 'integer', 'min:0', 'max:5'],
         ];

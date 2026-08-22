@@ -8,7 +8,7 @@ export default function AnimeCard({ anime }: { anime: Anime }) {
         <div key={anime.id}>
             <Link href={route('animes.show', anime.id)}>
                 <Card
-                    className="overflow-hidden border-0 bg-transparent shadow-none group hover:cursor-pointer"
+                    className="overflow-hidden border-0 bg-transparent shadow-none group hover:cursor-pointer max-w-32 xl:max-w-64"
                 >
                     <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-muted">
                         {anime.cover_url ? (

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('type');
             $table->integer('order')->default(1);
             $table->string('cover_type')->nullable();
-            $table->string('cover_url')->nullable();
+            $table->text('cover_url')->nullable();
             $table->string('cover_path')->nullable();
             $table->unsignedTinyInteger('rating')->nullable();
             $table->text('notes')->nullable();

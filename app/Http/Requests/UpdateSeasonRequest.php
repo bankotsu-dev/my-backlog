@@ -30,7 +30,7 @@ class UpdateSeasonRequest extends FormRequest
             'type' => ['required', 'in:season,movie,ova,special'],
             'order' => ['required', 'integer', 'min:1'],
             'img_type' => ['nullable', 'in:url,upload'],
-            'url' => ['nullable', 'url', 'max:255'],
+            'url' => ['nullable', 'url', 'max:64000'],
             'image' => ['nullable', 'image', 'max:1024'],
             'rating' => ['nullable', 'integer', 'min:0', 'max:5'],
             'notes' => ['nullable', 'max:64000'],

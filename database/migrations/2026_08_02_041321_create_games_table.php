@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('status');
             $table->text('description')->nullable();
             $table->text('notes')->nullable();
-            $table->string('cover')->nullable();
+            $table->text('cover')->nullable();
             $table->string('cover_public_id')->nullable();
-            $table->string('background_image')->nullable();
+            $table->text('background_image')->nullable();
             $table->string('background_public_id')->nullable();
             $table->string('developer')->nullable();
             $table->string('publisher')->nullable();

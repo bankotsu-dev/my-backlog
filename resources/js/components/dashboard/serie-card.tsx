@@ -8,7 +8,7 @@ export default function SerieCard({ serie }: { serie: Serie }) {
         <div key={serie.id}>
             <Link href={route('books.show', serie.id)}>
                 <Card
-                    className="overflow-hidden border-0 bg-transparent shadow-none group hover:cursor-pointer"
+                    className="overflow-hidden border-0 bg-transparent shadow-none group hover:cursor-pointer max-w-32 xl:max-w-64"
                 >
                     <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-muted">
                         {/* {anime.cover_url ? (
