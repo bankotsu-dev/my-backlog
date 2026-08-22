@@ -20,7 +20,11 @@ RUN npm run build
 
 FROM richarvey/nginx-php-fpm:3.1.6
 
+WORKDIR /var/www/html
 COPY . .
+
+# Copiar los assets compilados por Vite
+COPY --from=frontend /app/public/build ./public/build
 
 ENV SKIP_COMPOSER 1
 ENV WEBROOT /var/www/html/public
