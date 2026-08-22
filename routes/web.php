@@ -5,6 +5,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookSerieController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameImageController;
 use App\Http\Controllers\SeasonController;
@@ -14,9 +15,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     //Animes
     Route::get('animes', [AnimeController::class, 'index'])->name('animes.index');
